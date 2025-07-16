@@ -13,6 +13,7 @@ The goal of this stack is to build an Express.js backend boilerplate with common
 
 It's just an ExpressJS wrapper at this point so you can pretty much still configure and control everything as you would in a normal Express app.
 
+## Folder Structure
 ```
 your-app/
 ├── app/
@@ -73,7 +74,35 @@ export default defineMiddlewares(({ app, router }) => {
 - **Supertest utilities** for HTTP endpoint testing
 - **Fixture-based tests** using real app structures
 
+---
 
+Things to build and integrate
+
+- [ ] Organized Routing
+- [ ] Organized Controller and Service Layer
+- Common Middlewares
+  - [ ] Body Parser - express
+  - [ ] Cookies 
+  - [ ] File Upload (Multipart/Form Data) - multer
+  - [ ] CORS
+- [ ] Environment Variables - dotenv
+- [ ] Configuration
+- [ ] Error Handling
+- [ ] Logging - Pino
+- [ ] Database (mysql) - Drizzle
+    - [ ] ORM and Query Builder (Models)
+    - [ ] Migrations
+    - [ ] Seeders
+- [ ] Authentication - better-auth
+- [ ] Session
+- [ ] Authorization
+- [ ] JWT
+- [ ] Request Validation (Zod)
+- [ ] Pub/Sub (bring your own like redis) NodeJS Event Emitters
+- [ ] Background Worker - bree
+- [ ] Email - nodemailer
+- [ ] uWebsockets
+- [ ] tRPC? but in non-monorepo setup 🤔
 ---
 
 ### 📚 What does *kuwan* mean?
