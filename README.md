@@ -72,3 +72,17 @@ export default defineMiddlewares(({ app, router }) => {
 - **Vitest integration** for fast, modern testing
 - **Supertest utilities** for HTTP endpoint testing
 - **Fixture-based tests** using real app structures
+
+
+---
+
+### 📚 What does *kuwan* mean?
+
+**“kuwan”**(/kuˈan/ [kuˈwan̪]) is a Filipino (Tagalog) word used when you can’t remember or don’t want to say the actual name of something. It's similar to *“whatchamacallit”* or *“thingamajig”* in English.
+
+> **It’s the whatchamacallit backend**
+
+[Wiktionary: *kuwan*](https://en.wiktionary.org/wiki/kuwan)
+
+-----
+
