@@ -1,5 +1,8 @@
 import { createApp } from '@markterence/kuwan-expresspack';
 
+// Ensure we are in the correct directory
+process.chdir(__dirname);
+
 const app = await createApp();
 
 app.get('/', (req, res) => {
