@@ -1,0 +1,22 @@
+{
+  "name": "playground",
+  "version": "1.0.0",
+  "main": "server.ts",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:bun": "bun build ./app.ts --packages external --outdir .output",
+    "dev:bun": "bun --hot app.ts"
+  },
+  "packageManager": "pnpm@10.6.2",
+  "private": true,
+  "dependencies": {
+    "@markterence/kuwan-expresspack": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
