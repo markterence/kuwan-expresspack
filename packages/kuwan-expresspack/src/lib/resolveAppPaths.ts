@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs'
 import { join } from 'node:path'
 
 export function resolveAppPaths(root: string) {
@@ -37,4 +38,14 @@ export function resolveAppPaths(root: string) {
             base: errors,
         }
     }
+}
+
+/**
+ * `await import(file)` cant find the file without extension.
+ * Also, when bundled, the file extension will become `.js` or `.mjs` and not `.ts`.
+ */
+export const getFileCandidate = (filePath: string) => {
+    const candidates = [`${filePath}.ts`, `${filePath}.js`, `${filePath}.mjs`];
+    const file = candidates.find((p) => existsSync(p));
+    return file;
 }

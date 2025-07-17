@@ -10,15 +10,7 @@ export async function createApp(): Promise<express.Express> {
     const router = express.Router()
 
     const port = 3000;
-
-    const asyncLoader = async (fn: Promise<any>) => {
-        try {
-            await fn;
-        } catch (error) {
-            throw error;
-        }
-    }
-
+    
     // asyncLoader(middlewareLoader(app, router, root))
     await middlewareLoader(app, router, root)
 
