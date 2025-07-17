@@ -13,6 +13,7 @@ export function resolveAppPaths(root: string) {
 
     // Main application directory 
     const middlewareFilePath = join(app, 'middlewares')
+    const routesFilePath = join(app, 'routes')
 
 
 
@@ -20,6 +21,7 @@ export function resolveAppPaths(root: string) {
         root,
         app,
         middlewareFilePath,
+        routesFilePath,
 
         config: {
             base: config,
