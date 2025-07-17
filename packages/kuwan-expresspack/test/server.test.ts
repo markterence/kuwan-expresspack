@@ -43,4 +43,186 @@ describe('Kuwan Express Server', () => {
       .get('/non-existent-route')
       .expect(404)
   })
+
+  it('should load route from middlewares', async () => {
+    const response = await request
+      .get('/middlewares')
+      .expect(200)
+
+    expect(response.body).toEqual({
+      message: 'Middlewares are defined and working!'
+    })
+  })
+
+  it('should handle POST requests from middleware', async () => {
+    const postData = { key: 'value' }
+
+    const response = await request
+      .post('/middlewares')
+      .send(postData)
+      .expect(200)
+
+    expect(response.body).toEqual({
+      message: 'Data received via middlewares',
+      data: postData
+    })
+  })
+
+  // ===================
+  // User Controller Tests
+  // =====================
+  describe('Users Controller', () => {
+    it('should get user data from GET /some-user', async () => {
+      const response = await request
+        .get('/some-user')
+        .expect(200)
+
+      expect(response.body).toEqual({ message: 'User data' })
+    })
+
+    it('should get specific user by ID from GET /some-user/:id', async () => {
+      const userId = '123'
+      const response = await request
+        .get(`/some-user/${userId}`)
+        .expect(200)
+
+      expect(response.body).toEqual({
+        message: 'User found',
+        user: {
+          id: userId,
+          name: `User ${userId}`,
+          email: `user${userId}@example.com`
+        }
+      })
+    })
+
+    it('should create user with POST /some-user', async () => {
+      const userData = {
+        name: 'John Doe',
+        email: 'john@example.com',
+        age: 30
+      }
+
+      const response = await request
+        .post('/some-user')
+        .send(userData)
+        .expect(200)
+
+      expect(response.body).toEqual({
+        message: 'User created',
+        data: userData
+      })
+    })
+
+    it('should update user with PUT /some-user/:id', async () => {
+      const userId = '456'
+      const userData = {
+        name: 'Jane Smith',
+        email: 'jane@example.com',
+        age: 28
+      }
+
+      const response = await request
+        .put(`/some-user/${userId}`)
+        .send(userData)
+        .expect(200)
+
+      expect(response.body).toEqual({
+        message: 'User updated',
+        id: userId,
+        data: userData
+      })
+    })
+
+    it('should partially update user with PATCH /some-user/:id', async () => {
+      const userId = '789'
+      const updateData = {
+        email: 'newemail@example.com'
+      }
+
+      const response = await request
+        .patch(`/some-user/${userId}`)
+        .send(updateData)
+        .expect(200)
+
+      expect(response.body).toEqual({
+        message: 'User partially updated',
+        id: userId,
+        updates: updateData
+      })
+    })
+
+    it('should delete user with DELETE /some-user/:id', async () => {
+      const userId = '999'
+
+      const response = await request
+        .delete(`/some-user/${userId}`)
+        .expect(200)
+
+      expect(response.body).toEqual({
+        message: 'User deleted',
+        id: userId
+      })
+    })
+
+    it('should handle empty POST data to /some-user', async () => {
+      const response = await request
+        .post('/some-user')
+        .send({})
+        .expect(200)
+
+      expect(response.body).toEqual({
+        message: 'User created',
+        data: {}
+      })
+    })
+
+    it('should handle POST /some-user with JSON content type', async () => {
+      const userData = { username: 'testuser', role: 'admin' }
+
+      const response = await request
+        .post('/some-user')
+        .set('Content-Type', 'application/json')
+        .send(userData)
+        .expect(200)
+
+      expect(response.body.message).toBe('User created')
+      expect(response.body.data).toEqual(userData)
+    })
+
+    it('should handle PUT with empty body', async () => {
+      const userId = '111'
+
+      const response = await request
+        .put(`/some-user/${userId}`)
+        .send({})
+        .expect(200)
+
+      expect(response.body).toEqual({
+        message: 'User updated',
+        id: userId,
+        data: {}
+      })
+    })
+
+    it('should handle PATCH with multiple fields', async () => {
+      const userId = '222'
+      const updateData = {
+        name: 'Updated Name',
+        age: 35,
+        status: 'active'
+      }
+
+      const response = await request
+        .patch(`/some-user/${userId}`)
+        .send(updateData)
+        .expect(200)
+
+      expect(response.body).toEqual({
+        message: 'User partially updated',
+        id: userId,
+        updates: updateData
+      })
+    })
+  })
 })
