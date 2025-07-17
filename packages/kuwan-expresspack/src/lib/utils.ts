@@ -1,4 +1,5 @@
 
+// Obtained from NodeREPL: `> require("node:http").METHODS`
 export const HTTP_METHODS = [
   'ACL',        'BIND',        'CHECKOUT',
   'CONNECT',    'COPY',        'DELETE',

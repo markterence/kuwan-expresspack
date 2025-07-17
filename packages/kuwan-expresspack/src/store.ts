@@ -1,9 +1,9 @@
 import type { RequestHandler } from "express";
+import type { RouteDefinition } from "./types";
 
-type RouteDefinition = {
-  method: string;
-  path: string;
-  handlers: RequestHandler[];
-};
 
 export const routeRegistry: RouteDefinition[] = [];
+export const appHooks: {
+    onRouteLoaded?: (routes: RouteDefinition[]) => void;
+    onServerReady?: () => void;
+} = {};

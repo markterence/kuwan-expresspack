@@ -1,4 +1,7 @@
-
+/**
+ * Copyright (c) 2023-present, Mark Terence Tiglao (markterencetiglao@gmail.com)
+ * 
+ */
 import { getFileCandidate, resolveAppPaths } from './resolveAppPaths.js'
 import consola from 'consola' 
 import type { Express, RequestHandler, Router } from 'express'; 
@@ -38,7 +41,7 @@ export async function routesLoader(app: Express, router: Router, store: any, roo
       if (routeFn === undefined) {
         consola.error(`Route function for method \`${method} ${path}\` is undefined`);
       }
-      
+
       routeFn.call(router,path, ...handlers);
 
     } catch (error) {

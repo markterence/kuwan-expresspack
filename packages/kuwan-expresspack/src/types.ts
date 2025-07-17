@@ -9,3 +9,8 @@ export type MiddlewareExports =
       router?: [string, RequestHandler][] | RequestHandler[]
     }
  
+export type RouteDefinition = {
+  method: string;
+  path: string;
+  handlers: RequestHandler[];
+};
