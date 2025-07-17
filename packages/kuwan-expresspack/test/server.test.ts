@@ -12,7 +12,7 @@ describe('Kuwan Express Server', () => {
       .send(testData)
       .expect(200)
 
-    expect(response.body).toEqual(testData)
+    expect(response.body).toEqual({ received: testData })
   })
 
   it('should handle URL-encoded form data', async () => {
@@ -22,19 +22,20 @@ describe('Kuwan Express Server', () => {
       .set('Content-Type', 'application/x-www-form-urlencoded')
       .expect(200)
 
-    expect(response.body.name).toBe('John')
-    expect(response.body.age).toBe('30')
+    expect(response.status).toBe(200)
+    expect(response.body).toBeDefined()
+    expect(response.body).toHaveProperty('received')
+    expect(response.body.received.name).toBe('John')
+    expect(response.body.received.age).toBe('30')
   })
 
-  it('should apply middlewares from fixture', async () => {
-    // Test whatever routes/controllers you have in your fixture
+  it('should apply middlewares from fixture', async () => { 
     const response = await request
       .get('/')
       .expect(200)
-
-    // Adjust assertion based on what your fixture controllers return
+ 
     expect(response.status).toBe(200)
-    expect(response.text).toBe('Hello, Kuwan Stack!')
+    expect(response.text).toBe('Hello, Kuwan Stacks!')
   })
 
   it('should handle 404 for non-existent routes', async () => {

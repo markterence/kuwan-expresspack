@@ -1,6 +1,5 @@
 import express from 'express'
 import { existsSync } from 'node:fs'
-import { join } from 'node:path'
 import { resolveAppPaths } from '../lib/resolveAppPaths'
 import type { NextHandleFunction } from '../types'
 
@@ -35,11 +34,11 @@ export function defineConfig(config: BodyParserConfig) {
 }
 
 export function jsonBodyParser() : NextHandleFunction {
-  // return express.json(userConfig.json)
+  return express.json(userConfig.json)
   return express.json()
 }
 
 export function urlencodedBodyParser(): NextHandleFunction  {
-  // return express.urlencoded(userConfig.urlencoded)
-   return express.urlencoded()
+  return express.urlencoded(userConfig.urlencoded)
+  //  return express.urlencoded()
 }
