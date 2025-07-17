@@ -8,3 +8,4 @@ export type MiddlewareExports =
       app?: RequestHandler[]
       router?: [string, RequestHandler][] | RequestHandler[]
     }
+ 
