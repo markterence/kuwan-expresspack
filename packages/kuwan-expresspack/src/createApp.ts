@@ -1,8 +1,7 @@
 
-import express from 'express'
+import express, { Router } from 'express'
 import consola from 'consola'
-
-import { router } from './router';
+ 
 import { middlewareLoader } from './lib/middlewareLoader';
 import { routesLoader } from './lib/routesLoader';
 import { routeRegistry } from './store.js';
@@ -12,7 +11,7 @@ export async function createApp(): Promise<express.Express> {
     const root = process.cwd()
 
     const app = express()
-    // const router = express.Router()
+    const router: Router = express.Router();
 
     const port = 3000;
 

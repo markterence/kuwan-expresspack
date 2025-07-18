@@ -1,7 +1,7 @@
 import type { RequestHandler } from 'express';
 import { HTTP_METHODS } from './lib/utils'; 
 import { routeRegistry } from './store';
-type RoutePattern = `${string} /${string}`;
+import type { RoutePattern } from './types';
 
 const methodSet = new Set(HTTP_METHODS);
 
@@ -23,3 +23,4 @@ export const defineRoute = (path: RoutePattern, ...handlers: RequestHandler[]) =
 
     routeRegistry.push({ method: method.toLowerCase(), path: routePath, handlers });
 }
+
