@@ -7,7 +7,8 @@ export default defineConfig([
     treeshake: true,
     entry: [
       'src/index.ts',
-      'src/core/body-parser.ts'
+      'src/core/body-parser.ts',
+      'src/utils.ts',
     ], 
     dts: true,
     format: ['esm'],
