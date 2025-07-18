@@ -11,6 +11,17 @@ export default defineMiddlewares(({ app, router }) => {
     app.use(jsonBodyParser())
     app.use(urlencodedBodyParser())
 
+    app.use('/some-user', (req, res, next) => {
+        const auth = req.get('Authorization');
+        if (!auth || !auth.startsWith('Bearer ')) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+        const token = auth.split(' ')[1];
+        if (token !== 'valid-token') {
+            return res.status(403).json({ error: 'Forbidden' });
+        }
+        next();
+    })
     // routes can be also defined here, 
     // but this will be loaded last after all other middlewares and controller routes.
     router.get('/middlewares', (req, res) => {
