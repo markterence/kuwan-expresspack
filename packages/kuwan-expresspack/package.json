@@ -10,9 +10,13 @@
       "import": "./dist/utils.mjs",
       "types": "./dist/utils.d.mts"
     },
-    "./core/body-parser": {
-      "import": "./dist/core/body-parser.mjs",
-      "types": "./dist/core/body-parser.d.mts"
+    "./middlewares/body-parser": {
+      "import": "./dist/middlewares/body-parser/index.mjs",
+      "types": "./dist/middlewares/body-parser/index.d.mts"
+    },
+    "./middlewares/bearer-auth-token": {
+      "import": "./dist/middlewares/bearer-auth-token/index.mjs",
+      "types": "./dist/middlewares/bearer-auth-token/index.d.mts"
     }
   },
   "scripts": {
@@ -26,6 +30,7 @@
   "packageManager": "pnpm@10.6.2",
   "devDependencies": {
     "@types/express": "^5.0.3",
+    "@types/node": "^24.0.15",
     "@types/supertest": "^6.0.3",
     "supertest": "^7.1.3",
     "tsup": "^8.5.0",
@@ -36,6 +41,7 @@
   "dependencies": {
     "consola": "^3.4.2",
     "cors": "^2.8.5",
+    "dottie": "^2.0.6",
     "express": "^5.1.0",
     "listhen": "^1.9.0",
     "tinyglobby": "^0.2.14"

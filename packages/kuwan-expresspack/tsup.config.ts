@@ -7,7 +7,7 @@ export default defineConfig([
     treeshake: true,
     entry: [
       'src/index.ts',
-      'src/core/body-parser.ts',
+      'src/middlewares/*/index.ts',
       'src/utils.ts',
     ], 
     dts: true,
