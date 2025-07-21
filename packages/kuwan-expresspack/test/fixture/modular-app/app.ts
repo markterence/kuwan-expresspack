@@ -5,7 +5,7 @@ process.chdir(__dirname);
 
 const app = await createApp();
 
-app.get('/', (req, res) => {
+app.get('/basic', (req, res) => {
   res.send('Hello, Kuwan Stacks!');
 })
 

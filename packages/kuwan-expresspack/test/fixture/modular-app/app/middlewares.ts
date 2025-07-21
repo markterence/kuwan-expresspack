@@ -1,18 +1,25 @@
 import { defineMiddlewares } from '@markterence/kuwan-expresspack';
+import type { CreateAppContext }from '@markterence/kuwan-expresspack';
 import {
   jsonBodyParser,
   urlencodedBodyParser,
-} from '@markterence/kuwan-expresspack/core/body-parser'
+} from '@markterence/kuwan-expresspack/middlewares/body-parser'
 
-import clientModuleMiddleware from './modules/client/middleware'
+import clientModuleMiddleware from './modules/client/middleware' 
 // import book from './modules/client/api/book_controller';
 // import client from './modules/client/api/client_controller';
 // This is the root middleware.
-export default defineMiddlewares(({ app, router }) => {
+export default defineMiddlewares(({ app, router, defineRoute }: CreateAppContext) => {
     // This is where server middlewares can be placed.
     // Just like how you would do in a base Express server.
     app.use(jsonBodyParser())
-    app.use(urlencodedBodyParser()) 
+    app.use(urlencodedBodyParser())
+
+    defineRoute('GET /', (req, res) => {
+        res.json({
+            message: 'DefineRoute API directly in middlewares',
+        });
+    });
 
     // app.use('/', client);
     // app.use('/', book);

@@ -67,6 +67,15 @@ describe('Kuwan Express Server', async () => {
       data: postData
     })
   })
+  describe('Root App', () => {
+    it('should respond to the GET on users_controller', async () => {
+      const response = await request
+        .get('/user-controller')
+        .expect(200)
+
+      expect(response.body).toEqual({ message: 'User data' })
+    })
+  })
 
   describe('Client Module', () => {
     it('should handle GET request to /client', async () => {
@@ -146,4 +155,5 @@ describe('Kuwan Express Server', async () => {
       })
     })
   })
+ 
 })
