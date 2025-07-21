@@ -39,11 +39,11 @@ export function parseRoutePattern(routePattern: string): { method: string; path:
 export function addRouteToCollection(router: Router, routerId: string | undefined, method: string, path: string, handlers: RequestHandler[]) {
     if (!routeCollections.has(router)) {
         // maybe we count inject __routerId on the router here.
-        routerId = routerId || 'default';
-        (router as any).__routerId = routerId;
+        // (router as any).__routerId = routerId;
         routeCollections.set(router, []);
     }
 
+    routerId = routerId || 'default';
     const routes = routeCollections.get(router)!;
     routes.push({ method, path, handlers, routerName: routerId });
 }
@@ -102,7 +102,11 @@ export async function registerCollectedRoutes() {
     let registeredRoutes = 0;
 
     for (const [router, routes] of routeCollections) {
-        const routerId = (router as any).__routerId || DEFAULT_ROUTER_NAME;
+        // const routerId = (router as any).__routerId || DEFAULT_ROUTER_NAME;
+        // consola.debug(`Registering ${routes.length} routes for router (${routerId})`);
+        
+        // get routerId, its no longer set on the router but now passed as part of the route definition
+        const routerId = routes[0]?.routerName || DEFAULT_ROUTER_NAME;
         consola.debug(`Registering ${routes.length} routes for router (${routerId})`);
 
         for (const route of routes) {
