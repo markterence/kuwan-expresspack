@@ -6,6 +6,7 @@ export type RoutePattern = `${string} /${string}`;
 export type RouteDefinition = {
   method: string;
   path: string;
+  routerName?: string;
   handlers: RequestHandler[];
 };
 

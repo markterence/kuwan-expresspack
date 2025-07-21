@@ -58,7 +58,7 @@ export function createRouter(routerId?: string): CreateRouterReturn {
 
         const { method, path: routePath } = parsed;
 
-        addRouteToCollection(router, method, routePath, handlers);
+        addRouteToCollection(router, routerId, method, routePath, handlers);
         // No longer need to be called immediately
         // Since we register it later-on
         // registerRoute(method, routePath, handlers);

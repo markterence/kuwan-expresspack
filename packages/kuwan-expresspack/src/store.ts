@@ -1,6 +1,7 @@
 import type { RequestHandler, Router } from "express";
 import type { RouteDefinition } from "./types";
 import consola from "consola";
+import { colorizeHTTPMethod } from "./lib/utils";
 
 
 export const routeRegistry: RouteDefinition[] = [];
@@ -26,13 +27,13 @@ export const appHooks: {
     onAllRoutesRegistered?: (data: any) => void;
 } = {};
 
-export function addRouteToCollection(router: Router, method: string, path: string, handlers: RequestHandler[]) {
+export function addRouteToCollection(router: Router, routerId: string | undefined, method: string, path: string, handlers: RequestHandler[]) {
     if (!routeCollections.has(router)) {
         routeCollections.set(router, []);
     }
 
     const routes = routeCollections.get(router)!;
-    routes.push({ method, path, handlers });
+    routes.push({ method, path, handlers, routerName: routerId });
 }
 
 export function registerRouteInfo(router: Router, method: string, path: string, routerName?: string) {
@@ -73,6 +74,7 @@ export async function registerCollectedRoutes() {
     }
 
     for (const [router, routes] of routeCollections) {
+        
         consola.debug(`Registering ${routes.length} routes for router`);
 
         for (const route of routes) {
@@ -85,9 +87,10 @@ export async function registerCollectedRoutes() {
             if (routeFn === undefined) {
                 consola.error(`Route function for method \`${method} ${routePath}\` is undefined`);
             } else {
-                consola.debug(`Registering route: ${method.toUpperCase()} ${routePath}`);
+                const routerName = route.routerName || 'no-name';
+                consola.debug(`Registering route: (${routerName}) ${colorizeHTTPMethod(method)} ${routePath}`);
                 routeFn.call(router, routePath, ...handlers);
-                registerRouteInfo(router, method.toUpperCase(), routePath);
+                registerRouteInfo(router, method.toUpperCase(), routePath, route.routerName);
                 registeredRoutes++;
 
                 if (appHooks.onRouteLoaded) {
