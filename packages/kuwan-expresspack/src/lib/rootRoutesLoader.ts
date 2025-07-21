@@ -14,18 +14,17 @@ import type { CreateAppContext } from '../types.js';
 export async function rootRoutesLoader(c: CreateAppContext) {
   
   const { routesFilePath } = resolveAppPaths(c.root);
- 
-  consola.debug(`Loading routes from: ${routesFilePath}`);
- 
   const file = getFileCandidate(routesFilePath)
 
   if (!file) {
     consola.warn(`No root route file found at: ${routesFilePath}`);
     return
   }
-  
+
   const relativeRoutesFilePath = getRelativeFilePath(file, c.root);
 
+  consola.debug(`Loading routes from: ${relativeRoutesFilePath}`);
+ 
   try {
    const routeModule = await import(file);
    const defineRoutes = routeModule?.default || routeModule;
