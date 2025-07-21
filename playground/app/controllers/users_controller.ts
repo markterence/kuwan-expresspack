@@ -1,5 +1,10 @@
-import { defineRoute } from "@markterence/kuwan-expresspack";
- 
+import { createRouter } from "@markterence/kuwan-expresspack";
+const { router, defineRoute } = createRouter('users_controller');
+
+defineRoute('GET /user-controller', (req, res) => {
+  res.json({ message: 'User data' });
+});
+
 defineRoute('GET /some-user', (req, res) => {
   res.json({ message: 'User data' });
 });
@@ -48,3 +53,5 @@ defineRoute('DELETE /some-user/:id', (req, res) => {
     id: userId 
   });
 });
+
+export default router;
