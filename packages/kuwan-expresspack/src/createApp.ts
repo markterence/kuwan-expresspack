@@ -3,11 +3,12 @@ import express, { Router } from 'express'
 import consola from 'consola'
  
 import { middlewareLoader } from './lib/middlewareLoader';
-import { rootRoutesLoader } from './lib/rootRoutesLoader.js';
-import { registerCollectedRoutes, routeRegistry } from './store.js';
+import { rootRoutesLoader } from './lib/rootRoutesLoader';
+import { registerCollectedRoutes } from './lib/routeService';
 import { createRouter } from './router.js';
 
 consola.level = 4; // Set to debug level
+
 export async function createApp(): Promise<express.Express> {
     const root = process.cwd()
 
@@ -33,8 +34,6 @@ export async function createApp(): Promise<express.Express> {
 
     await registerCollectedRoutes();
 
-    // Register router middleware
-    // await routesLoader(app, router, {routeRegistry}, root)
     // Load the routes defined in `middleware.ts` last? 
     app.use(rootRouter.router);
 

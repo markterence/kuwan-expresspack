@@ -1,7 +1,6 @@
-import { clearRouteCollections, registerCollectedRoutes } from '../store.js';
-import type { CreateAppContext, MiddlewareExports } from '../types.js';
-import { getFileCandidate, getRelativeFilePath, resolveAppPaths } from './resolveAppPaths.js'
 import consola from 'consola'
+import type { CreateAppContext, MiddlewareExports } from '../types';
+import { getFileCandidate, getRelativeFilePath, resolveAppPaths } from './resolveAppPaths'
 
 export async function middlewareLoader(c: CreateAppContext): Promise<void> {
   const { middlewareFilePath } = resolveAppPaths(c.root);
