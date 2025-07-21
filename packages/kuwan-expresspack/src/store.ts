@@ -64,7 +64,7 @@ export function clearRouteCollections() {
     routeCollections.clear();
 }
 
-export function registerCollectedRoutes() {
+export async function registerCollectedRoutes() {
     consola.debug(`Registering routes for ${routeCollections.size} routers from \`createRoute()\``);
     let totalRoutes = 0;
     let registeredRoutes = 0;
@@ -76,7 +76,6 @@ export function registerCollectedRoutes() {
         consola.debug(`Registering ${routes.length} routes for router`);
 
         for (const route of routes) {
-
             const method = route.method.toLowerCase();
             const routePath = route.path;
             const handlers = route.handlers;
@@ -92,16 +91,18 @@ export function registerCollectedRoutes() {
                 registeredRoutes++;
 
                 if (appHooks.onRouteLoaded) {
-                    appHooks.onRouteLoaded([{ method, path: routePath, handlers }]);
+                    await Promise.resolve(appHooks.onRouteLoaded([{ method, path: routePath, handlers }]));
                 }
             }
         }
     }
+    const stats = {
+        totalRoutes,
+        registeredRoutes,
+        routerCount: routeCollections.size
+    };
+
     if (appHooks.onAllRoutesRegistered) {
-        appHooks.onAllRoutesRegistered({
-            totalRoutes,
-            registeredRoutes,
-            routerCount: routeCollections.size
-        });
+        await Promise.resolve(appHooks.onAllRoutesRegistered(stats));
     }
 }

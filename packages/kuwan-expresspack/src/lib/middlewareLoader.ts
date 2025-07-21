@@ -1,9 +1,11 @@
 import { clearRouteCollections, registerCollectedRoutes } from '../store.js';
+import type { CreateAppContext, MiddlewareExports } from '../types.js';
 import { getFileCandidate, resolveAppPaths } from './resolveAppPaths.js'
 import consola from 'consola'
 
-export async function middlewareLoader(app: any, router: any, root: string) {
-  const { middlewareFilePath } = resolveAppPaths(root)
+export async function middlewareLoader(c: CreateAppContext): Promise<void> {
+  const { middlewareFilePath } = resolveAppPaths(c.root);
+
   consola.debug(`Loading middleware from: ${middlewareFilePath}`);
  
   const file = getFileCandidate(middlewareFilePath)
@@ -12,12 +14,10 @@ export async function middlewareLoader(app: any, router: any, root: string) {
     return
   }
 
-  const setup = (await import(file)).default
+  const setup: MiddlewareExports = (await import(file)).default
   if (typeof setup === 'function') {
     consola.debug('Executing middleware setup function');
-    await setup({ app, router })
-
-    registerCollectedRoutes();
+    await setup(c);
   }
   
   // Object-based middleware setup is here but not tested.

@@ -1,5 +1,5 @@
 import { existsSync } from 'node:fs'
-import { join } from 'node:path'
+import path, { join } from 'node:path'
 
 export function resolveAppPaths(root: string) {
     const app = join(root, 'app')
@@ -50,4 +50,14 @@ export const getFileCandidate = (filePath: string) => {
     const candidates = [`${filePath}.ts`, `${filePath}.js`, `${filePath}.mjs`];
     const file = candidates.find((p) => existsSync(p));
     return file;
+}
+
+export const getRelativeFilePath = (filePath: string, root: string) => {
+    if (!filePath.startsWith(root)) {
+        throw new Error(`File path ${filePath} does not start with root ${root}`);
+    }
+    // Do not strip the file extension if its a file.
+
+
+    return path.relative(root, filePath);
 }
