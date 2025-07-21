@@ -1,10 +1,11 @@
 import type { Router } from "express";
-import type { RouteDefinition } from "./types";
-
+import type { RouteDefinition, ConfigMap } from "./types";
 
 export const DEFAULT_ROUTER_NAME = "no-name";
 
 export const routeRegistry: RouteDefinition[] = [];
+
+export let globalConfigMap: ConfigMap = new Map()
 
 /**
  * Collects routes defined using `defineRoute`.

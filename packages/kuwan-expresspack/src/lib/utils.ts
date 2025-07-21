@@ -1,5 +1,7 @@
 import crypto from 'node:crypto';
 import { colorize, type ColorName } from 'consola/utils';
+import node_path from 'node:path'; 
+import { fileURLToPath } from 'url';
 
 // Obtained from NodeREPL: `> require("node:http").METHODS`
 export const HTTP_METHODS = [
@@ -50,9 +52,18 @@ export const colorizeHTTPMethod = (method: string): string => {
   return colorize(colorName, _method);
 }
 
-function timingSafeCompare(a: any, b: any): boolean {
-  const bufA = Buffer.from(a);
-  const bufB = Buffer.from(b);
-  if (bufA.length !== bufB.length) return false;
-  return crypto.timingSafeEqual(bufA, bufB);
+
+/**
+ *  just adds the os separator to the end of the path
+ *  for logging purposes
+ */
+export function logPath(path: string): string {
+  if (!path) return '';
+  const sep = node_path.sep;
+  if (path.endsWith(sep)) return path;
+  return path + sep;
+}
+
+export function resolveAppRoot(importMetaUrl: string): string {
+  return node_path.dirname(fileURLToPath(importMetaUrl))
 }

@@ -1,13 +1,11 @@
-import express, { Router, type RequestHandler } from 'express';
+import { Router } from 'express';
+import type { RequestHandler } from 'express';
 import type { CreateRouterReturn, RoutePattern } from './types';
-import { HTTP_METHODS } from './lib/utils';
 import consola from 'consola';
 import { addRouteToCollection, parseRoutePattern } from './lib/routeService';
 
-
-
 export function createRouter(routerId?: string): CreateRouterReturn {
-    const router = express.Router();
+    const router: Router = Router();
 
     function defineRoute(path: RoutePattern, ...handlers: RequestHandler[]) {
         const parsed = parseRoutePattern(path);
@@ -27,5 +25,8 @@ export function createRouter(routerId?: string): CreateRouterReturn {
     // (router as any).defineRoute = defineRoute;
     // (router as any).registerCollectedRoutes = registerCollectedRoutes;
 
-    return { router, defineRoute };
+    return { 
+        router: (router as Router), 
+        defineRoute 
+    };
 }
