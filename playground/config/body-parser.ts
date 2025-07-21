@@ -1,6 +1,6 @@
 
 
-import { defineConfig } from '@markterence/kuwan-expresspack/core/body-parser'
+import { defineConfig } from '@markterence/kuwan-expresspack/middlewares/body-parser'
 
 export default defineConfig({
   json: {

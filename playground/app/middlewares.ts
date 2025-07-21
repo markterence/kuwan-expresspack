@@ -3,7 +3,7 @@ import  type { CreateAppContext }from '@markterence/kuwan-expresspack';
 import {
   jsonBodyParser,
   urlencodedBodyParser,
-} from '@markterence/kuwan-expresspack/core/body-parser'
+} from '@markterence/kuwan-expresspack/middlewares/body-parser'
  
 // import book from './modules/client/api/book_controller';
 // import client from './modules/client/api/client_controller';
