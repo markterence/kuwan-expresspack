@@ -6,7 +6,7 @@ import { checkDir, getFileCandidate, getRelativeFilePath, resolveAppPaths } from
 
 import { globalConfigMap } from '../store';
 import { logPath } from './utils';
-
+import { build, } from 'tsup'
 
 // Ignore TypeScript declaration files and source maps
 // but it seems glob can do that for us.
@@ -26,10 +26,13 @@ function isValidConfigFile(filename: string): boolean {
  * Example: `config/<topic>.{js,ts,mjs,cjs,mts,cts}`
  */
 async function getConfigTopics(configDir: string): Promise<string[]> {
-    // maybe also add glob to not include source maps and declaration files?
-    const configFiles = await glob('*.{js,ts,mjs,cjs,mts,cts}', {
+    const configFiles = await glob(['*.{js,ts,mjs,cjs,mts,cts}',
+        /* Ignore definitions and source-maps */
+        '!*.d.{ts,mts,mjs,cts}', '!*.map', 
+        /* Ignore built-in files with specific or controlled loaders */
+        '!{app,}.{js,ts,mjs,cjs,mts,cts}'
+    ], {
         cwd: configDir,
-        ignore: ['*.d.ts', '*.d.mts', '*.d.mjs', '*.d.cts', '*.map'],
     })
 
     // Extract unique topics (filenames without extensions)
@@ -77,18 +80,20 @@ export async function loadAllConfigs(root: string): Promise<void> {
         try {
             const configModule = await import(configPath)
             let configValue = configModule.default || configModule
-            
+          
             // Handle factory functions
             if (typeof configValue === 'function') {
                 configValue = await configValue()
-            }
-            
+            } 
             globalConfigMap.set(topic, configValue)
-            
+           
             const fileName = configPath.split('/').pop()
             consola.debug(`Loaded config: ${topic} from ${fileName}`)
         } catch (error) {
             consola.error(`Failed to load config ${topic}:`, error)
         }
     }
+
+    // tsup
+    
 }

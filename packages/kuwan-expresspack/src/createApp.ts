@@ -7,6 +7,10 @@ import { rootRoutesLoader } from './lib/rootRoutesLoader';
 import { registerCollectedRoutes } from './lib/routeService';
 import { createRouter } from './router.js';
 import { loadAllConfigs } from './lib/configLoader.js';
+import { loadAppConfig } from './lib/appConfigLoader.js';
+import { globalConfigMap } from './store.js';
+import { useAppConfig } from './useAppConfig.js';
+import { type ApplicationConfig } from './core/app-config/index.js';
 
 consola.level = 4; // Set to debug level
 
@@ -15,6 +19,7 @@ export async function createApp(): Promise<express.Express> {
 
     const root = process.cwd()
 
+    await loadAppConfig(root);
     await loadAllConfigs(root)
 
     const app = express()
@@ -22,8 +27,8 @@ export async function createApp(): Promise<express.Express> {
     
     // const router: Router = express.Router();
     // const { router, defineRoute } = rootRouter;
-
-    const port = 3000;
+    const appConfig = globalConfigMap.get('app') as ApplicationConfig;
+    const port = appConfig.appPort;
 
     const context = {
         app,

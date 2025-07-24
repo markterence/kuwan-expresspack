@@ -5,7 +5,8 @@ export function resolveAppPaths(root: string) {
     const app = join(root, 'app')
 
     const config = join(root, 'config') 
-    const bodyParserConfig = join(config, 'body-parser')
+    const appConfigFile = join(config, 'app');
+    const bodyParserConfig = join(config, 'body-parser');
 
     // Subdirectories of `app` directory
     const controllers = join(app, 'controllers')
@@ -25,6 +26,7 @@ export function resolveAppPaths(root: string) {
         config: {
             base: config,
             bodyParserFile: bodyParserConfig,
+            appConfigFile,
         },
 
         controllers: {
