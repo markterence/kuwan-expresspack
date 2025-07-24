@@ -1,6 +1,9 @@
 {
-"workspaces": [
-    "packages/*",
-    "playground"
-]
+    "workspaces": [
+        "packages/*",
+        "playground/*"
+    ],
+    "devDependencies": {
+        "tsup": "^8.5.0"
+    }
 }
