@@ -7,7 +7,7 @@ let app: Awaited<ReturnType<typeof createApp>>
 
 beforeAll(async () => {
   // problematic, but it seems that config loading works.
-  // process.chdir('./test/fixture/modular-app');
+  process.chdir('./test/fixture/modular-app');
   app = await createApp()
 })
 
