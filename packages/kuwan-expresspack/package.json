@@ -6,6 +6,10 @@
   "types": "dist/index.d.mts",
   "exports": {
     ".": "./dist/index.mjs",
+    "./core/app-config": {
+      "import": "./dist/core/app-config/index.mjs",
+      "types": "./dist/core/app-config/index.d.mts"
+    },
     "./utils": {
       "import": "./dist/utils.mjs",
       "types": "./dist/utils.d.mts"

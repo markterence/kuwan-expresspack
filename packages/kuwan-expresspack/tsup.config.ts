@@ -8,6 +8,7 @@ export default defineConfig([
     entry: [
       'src/index.ts',
       'src/middlewares/*/index.ts',
+      'src/core/*/index.ts',
       'src/utils.ts',
     ], 
     dts: true,
