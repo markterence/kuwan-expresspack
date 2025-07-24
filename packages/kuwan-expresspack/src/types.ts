@@ -16,7 +16,7 @@ export type CreateRouterReturn = {
     // registerCollectedRoutes: () => void;
 }
 
-export type ConfigValue = any
+export type ConfigValue = any;
 export type ConfigMap = Map<string, ConfigValue>
 
 /**
