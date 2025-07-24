@@ -57,10 +57,10 @@ export async function createApp(): Promise<express.Express> {
                     return resolve();
                 }
                 consola.info('Server has been shut down.');
-                resolve();
+                return resolve();
             });
         })
-    }
+    };
 
     return app;
 }
