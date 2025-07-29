@@ -1,0 +1,57 @@
+{
+  "name": "expresspack",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs"
+    },
+    "./build-tools": {
+      "types": "./dist/build-tools/index.d.ts",
+      "import": "./dist/build-tools/index.mjs"
+    },
+    "./config": {
+      "types": "./dist/config.d.ts",
+      "import": "./dist/config.mjs"
+    },
+    "./middlewares/body-parser": {
+      "types": "./dist/middlewares/body-parser/index.d.ts",
+      "import": "./dist/middlewares/body-parser/index.mjs"
+    }
+  },
+  "main": "./dist/index.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsup --watch",
+    "build": "tsup-node"
+  },
+  "files": [
+    "LICENSE",
+    "README.md",
+    "codemods/rules",
+    "dist"
+  ],
+  "dependencies": {
+    "consola": "^3.4.2",
+    "express": "^5.1.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "packageManager": "pnpm@10.13.1+sha512.37ebf1a5c7a30d5fabe0c5df44ee8da4c965ca0c5af3dbab28c3a1681b70a256218d05c81c9c0dcf767ef6b8551eb5b960042b9ed4300c59242336377e01cfad",
+  "devDependencies": {
+    "@types/bun": "^1.2.19",
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.0.15",
+    "tsup": "^8.5.0",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
+  },
+  "peerDependencies": {
+    "express": "^5.1.0"
+  },
+  "sideEffects": false
+}
