@@ -1,6 +1,8 @@
 import type { Express } from 'express';
 import logger from './logger'
 import type { Server } from 'node:http'; 
+import emitter from './services/emitter';
+
 export function gracefulHTTPStart(app: Express, port: number, onStart?: () => Promise<void>): Server {
     const server = app.listen(port, async () => {
 
@@ -15,6 +17,9 @@ export function gracefulHTTPStart(app: Express, port: number, onStart?: () => Pr
             style: { borderColor: 'cyan' },
             level: 'info'
         }) 
+
+        emitter.emit('app:mounted');
+
     });
 
     return server;

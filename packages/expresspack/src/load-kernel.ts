@@ -1,5 +1,11 @@
 import logger from "./logger";
-export async function loadKernel({ app }, { kernel }: { kernel: () => Promise<any> }) {
+export async function loadKernel({ app }, { 
+        kernel,
+        listener,
+    }: { 
+        kernel: () => Promise<any> 
+        listener?: () => Promise<any>
+    }) {
     logger.debug('Loading kernel...');
     try {
         const fn = await kernel();
@@ -8,6 +14,22 @@ export async function loadKernel({ app }, { kernel }: { kernel: () => Promise<an
     } catch (error) {
         logger.error('Error loading kernel:', error);
         throw error;
+    }
+
+    // Load listeners as part of the kernel
+    if (listener && typeof listener === 'function') {
+        try {
+            const listenerFn = await listener();
+            const setupListener = listenerFn?.default || listenerFn;
+            if (setupListener === undefined || typeof setupListener !== 'function') {
+                logger.warn('No listener setup function found');
+            }else {
+                await setupListener();
+            }
+        } catch (error) {
+            logger.error('Error loading listener:', error);
+            throw error;
+        }
     }
      
 }

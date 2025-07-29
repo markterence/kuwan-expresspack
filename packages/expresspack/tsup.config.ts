@@ -9,7 +9,8 @@ export default defineConfig([
       'src/index.ts',
       'src/build-tools/index.ts',
       'src/config.ts',
-      'src/middlewares/**/index.ts',
+      'src/middlewares/*/index.ts',
+      'src/services/*/index.ts',
     ], 
     outExtension({ format }) {
       return {
