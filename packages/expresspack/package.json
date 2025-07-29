@@ -51,7 +51,9 @@
     "vitest": "^3.2.4"
   },
   "peerDependencies": {
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "@types/express": "^5.0.3",
+    "typescript": "^5.8.3"
   },
   "sideEffects": false
 }
