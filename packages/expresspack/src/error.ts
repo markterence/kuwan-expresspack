@@ -9,7 +9,7 @@ export class CustomError extends Error {
     isOperational: boolean;
 
     readonly [CUSTOM_ERROR_SYMBOL] = true;
-
+    
     constructor({
         message = 'An error occurred',
         code = 'INTERNAL_SERVER_ERROR',
@@ -17,7 +17,14 @@ export class CustomError extends Error {
         data = null,
         isOperational = true,
         sanitizeData = true,
-    }) {
+    }: {
+        message?: string;
+        code?: string;
+        statusCode?: number;
+        data?: unknown;
+        isOperational?: boolean;
+        sanitizeData?: boolean;
+    } = {}) {
         super(message);
         this.name = 'CustomError';
         this.status = statusCode;
@@ -26,6 +33,11 @@ export class CustomError extends Error {
         this.isOperational = isOperational;
 
         this.data = sanitizeData ? this.sanitizeDataForJSON(data) : data;
+
+        // Capture stack trace and remove the constructor chain
+        if (Error.captureStackTrace) {
+            Error.captureStackTrace(this, this.constructor as any);
+        }
 
         Object.setPrototypeOf(this, CustomError.prototype);
     }
