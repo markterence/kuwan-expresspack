@@ -3,6 +3,15 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "files": [
+    "LICENSE",
+    "README.md",
+    "codemods/rules",
+    "dist"
+  ],
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -19,6 +28,10 @@
     "./error": {
       "types": "./dist/error.d.ts",
       "import": "./dist/error.mjs"
+    }, 
+    "./middlewares/*": {
+      "types": "./dist/middlewares/*/index.d.ts",
+      "import": "./dist/middlewares/*/index.d.mjs"
     },
     "./middlewares/body-parser": {
       "types": "./dist/middlewares/body-parser/index.d.ts",
@@ -29,22 +42,17 @@
       "import": "./dist/middlewares/error-handler/index.mjs"
     },
     "./services/event" : {
-      "types": "./dist/services/emitter/index.d.ts",
-      "import": "./dist/services/emitter/index.mjs"
+      "types": "./dist/services/event/index.d.ts",
+      "import": "./dist/services/event/index.mjs"
     }
   },
-  "main": "./dist/index.mjs",
+
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsup --watch",
     "build": "tsup-node"
   },
-  "files": [
-    "LICENSE",
-    "README.md",
-    "codemods/rules",
-    "dist"
-  ],
+
   "dependencies": {
     "consola": "^3.4.2",
     "emittery": "^1.2.0",
