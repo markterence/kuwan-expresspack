@@ -16,11 +16,19 @@
       "types": "./dist/config.d.ts",
       "import": "./dist/config.mjs"
     },
+    "./error": {
+      "types": "./dist/error.d.ts",
+      "import": "./dist/error.mjs"
+    },
     "./middlewares/body-parser": {
       "types": "./dist/middlewares/body-parser/index.d.ts",
       "import": "./dist/middlewares/body-parser/index.mjs"
     },
-    "./services/emitter" : {
+    "./middlewares/error-handler": {
+      "types": "./dist/middlewares/error-handler/index.d.ts",
+      "import": "./dist/middlewares/error-handler/index.mjs"
+    },
+    "./services/event" : {
       "types": "./dist/services/emitter/index.d.ts",
       "import": "./dist/services/emitter/index.mjs"
     }

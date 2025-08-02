@@ -7,8 +7,9 @@ export default defineConfig([
     treeshake: true,
     entry: [
       'src/index.ts',
-      'src/build-tools/index.ts',
+      'src/error.ts',
       'src/config.ts',
+      'src/build-tools/index.ts',
       'src/middlewares/*/index.ts',
       'src/services/*/index.ts',
     ], 
