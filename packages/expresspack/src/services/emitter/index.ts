@@ -1,10 +1,19 @@
 import Emittery from 'emittery';
-
+import { env } from 'node:process'
 /**
  * Base event map that users can extend in their applications
  */
 export interface EmitterEvents {
     [key: string]: any;
+}
+
+function isDebugEnabled(): boolean {
+    return env.EXPRESSPACK_EVENT_EMITTER_DEBUG === 'true' 
+        || env.EXPRESSPACK_EVENT_EMITTER_DEBUG === '1' 
+        || (
+            (typeof env.EXPRESSPACK_EVENT_EMITTER_DEBUG === 'boolean') ? 
+            env.EXPRESSPACK_EVENT_EMITTER_DEBUG === true : false
+        );
 }
 
 /**
@@ -13,7 +22,7 @@ export interface EmitterEvents {
 const emitter = new Emittery<EmitterEvents>({
     debug: {
         name: 'expresspack-emitter',
-        enabled: process.env.NODE_ENV === 'development'
+        enabled: isDebugEnabled()
     }
 });
 
@@ -23,8 +32,8 @@ const emitter = new Emittery<EmitterEvents>({
 export function createEmitter<T extends EmitterEvents = EmitterEvents>(): Emittery<T> {
     return new Emittery<T>({
         debug: {
-            name: 'expresspack-emitter',
-            enabled: process.env.NODE_ENV === 'development'
+            name: 'c-emitter',
+            enabled: isDebugEnabled()
         }
     });
 }
