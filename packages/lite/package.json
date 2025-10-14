@@ -1,0 +1,92 @@
+{
+  "name": "kuwan-expresspack-core",
+  "version": "0.1.0",
+  "description": "",
+  "type": "module",
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "bin": {
+    "expresspack-api": "./dist/bin/expresspack-api.mjs"
+  },
+  "files": [
+    "bin",
+    "LICENSE",
+    "README.md",
+    "codemods/rules",
+    "dist"
+  ],
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs"
+    },
+    "./build-tools": {
+      "types": "./dist/build-tools/index.d.ts",
+      "import": "./dist/build-tools/index.mjs"
+    },
+    "./config": {
+      "types": "./dist/config.d.ts",
+      "import": "./dist/config.mjs"
+    },
+    "./error": {
+      "types": "./dist/error.d.ts",
+      "import": "./dist/error.mjs"
+    },
+    "./middlewares/*": {
+      "types": "./dist/middlewares/*/index.d.ts",
+      "import": "./dist/middlewares/*/index.mjs"
+    },
+    "./middlewares/body-parser": {
+      "types": "./dist/middlewares/body-parser/index.d.ts",
+      "import": "./dist/middlewares/body-parser/index.mjs"
+    },
+    "./middlewares/error-handler": {
+      "types": "./dist/middlewares/error-handler/index.d.ts",
+      "import": "./dist/middlewares/error-handler/index.mjs"
+    },
+    "./services/*": {
+      "types": "./dist/services/*/index.d.ts",
+      "import": "./dist/services/*/index.d.mjs"
+    },
+    "./services/event": {
+      "types": "./dist/services/event/index.d.ts",
+      "import": "./dist/services/event/index.mjs"
+    }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsup --watch",
+    "build": "rimraf ./dist -v &&  tsup-node"
+  },
+  "dependencies": {
+    "citty": "^0.1.6",
+    "consola": "^3.4.2",
+    "dayjs": "^1.11.13",
+    "drizzle-kit": "^0.31.4",
+    "drizzle-orm": "^0.44.4",
+    "emittery": "^1.2.0",
+    "execa": "^9.6.0",
+    "express": "^5.1.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "packageManager": "pnpm@10.13.1+sha512.37ebf1a5c7a30d5fabe0c5df44ee8da4c965ca0c5af3dbab28c3a1681b70a256218d05c81c9c0dcf767ef6b8551eb5b960042b9ed4300c59242336377e01cfad",
+  "devDependencies": {
+    "@types/bun": "^1.2.19",
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.0.15",
+    "rimraf": "^6.0.1",
+    "tsup": "^8.5.0",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
+  },
+  "peerDependencies": {
+    "@types/express": "^5.0.3",
+    "express": "^5.1.0",
+    "typescript": "^5.8.3"
+  },
+  "sideEffects": false
+}
