@@ -5,7 +5,11 @@
   "type": "module",
   "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",
+  "bin": {
+    "expresspack": "./dist/bin/expresspack.mjs"
+  },
   "files": [
+    "bin",
     "LICENSE",
     "README.md",
     "codemods/rules",
@@ -28,10 +32,10 @@
     "./error": {
       "types": "./dist/error.d.ts",
       "import": "./dist/error.mjs"
-    }, 
+    },
     "./middlewares/*": {
       "types": "./dist/middlewares/*/index.d.ts",
-      "import": "./dist/middlewares/*/index.d.mjs"
+      "import": "./dist/middlewares/*/index.mjs"
     },
     "./middlewares/body-parser": {
       "types": "./dist/middlewares/body-parser/index.d.ts",
@@ -41,22 +45,45 @@
       "types": "./dist/middlewares/error-handler/index.d.ts",
       "import": "./dist/middlewares/error-handler/index.mjs"
     },
-    "./services/event" : {
+    "./services/*": {
+      "types": "./dist/services/*/index.d.ts",
+      "import": "./dist/services/*/index.d.mjs"
+    },
+    "./services/event": {
       "types": "./dist/services/event/index.d.ts",
       "import": "./dist/services/event/index.mjs"
+    },
+    "./plugins/*": {
+      "types": "./dist/plugins/*/index.d.ts",
+      "import": "./dist/plugins/*/index.mjs"
+    },
+    "./plugins/auth": {
+      "types": "./dist/plugins/auth/index.d.ts",
+      "import": "./dist/plugins/auth/index.mjs"
+    },
+    "./plugins/auth/config": {
+      "types": "./dist/plugins/auth/config.d.ts",
+      "import": "./dist/plugins/auth/config.mjs"
     }
   },
-
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsup --watch",
-    "build": "tsup-node"
+    "build": "rimraf ./dist -v &&  tsup-node"
   },
-
   "dependencies": {
+    "@better-auth/cli": "^1.3.4",
+    "better-auth": "^1.3.4",
+    "citty": "^0.1.6",
     "consola": "^3.4.2",
+    "dayjs": "^1.11.13",
+    "drizzle-kit": "^0.31.4",
+    "drizzle-orm": "^0.44.4",
     "emittery": "^1.2.0",
-    "express": "^5.1.0"
+    "execa": "^9.6.0",
+    "express": "^5.1.0",
+    "kysely-ctl": "^0.14.0",
+    "zod": "^4.0.14"
   },
   "keywords": [],
   "author": "",
@@ -66,6 +93,7 @@
     "@types/bun": "^1.2.19",
     "@types/express": "^5.0.3",
     "@types/node": "^24.0.15",
+    "rimraf": "^6.0.1",
     "tsup": "^8.5.0",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3",

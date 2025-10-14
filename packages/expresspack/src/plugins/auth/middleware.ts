@@ -1,0 +1,1 @@
+export { toNodeHandler } from "better-auth/node";

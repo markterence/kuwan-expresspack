@@ -3,6 +3,8 @@
 
 Work-in-progress (still under development)
 
+Note: Currently in the "development stage". Breaking changes are introduced without following semantic versioning.
+
 A TypeScript backend stack for building backend applications powered by Express.js.
 
 > _Ano gamit nyong backend?. Ahh... yung kuwan, yung kuwan. ExpressJS, tapos may kuwan, mga kuwan._

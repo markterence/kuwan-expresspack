@@ -6,7 +6,7 @@ import consola from 'consola';
 export default function generateConfigTypeDefinitions(root, configFiles: { topic: string, configPath: string }[]) {
 
     const typeEntries = configFiles.map(
-        c => `    ${c.topic}: typeof import('${c.configPath}').default;`
+        c => `${c.topic}: typeof import('${c.configPath}').default;`
     );
 
     const typeFile = `

@@ -5,7 +5,7 @@ import { checkDir, getFileCandidate, resolveAppPaths } from './lib/resolve-path'
 import { logPath } from './lib/utils';
 import config from './config';
 import generateConfigTypeDefinitions from './lib/config-typegen';
-import { formatTree } from 'consola/utils'
+
 const GLOB_PATTERN = '*.{js,ts,mjs,cjs,mts,cts}';
 const IGNORED_PATTERNS = [
     /* Ignore definitions and source-maps */
@@ -82,19 +82,24 @@ export async function configLoader(root: string): Promise<void> {
             const fileName = configPath.split('/').pop()
             logger.debug(`Loaded config: ${topicCamelCase} from ${fileName}`)
             
+            // For type generation, no need to generate types in production
             if (process.env.NODE_ENV !== 'production') {
                 configFiles.add({ topic: topicCamelCase, configPath });
             }
+
+            // Config signature validator (not implemented for now)
+            // verifyConfigSignature(configModule.default || configModule, topicCamelCase, configPath);
 
         } catch (error) {
             logger.error(`Failed to load config ${topic}:`, error)
         }
 
-        if(process.env.NODE_ENV !== 'production') {
-            // Generate type definitions for the config
-            // logger.info('config: ' + configPath);
-            generateConfigTypeDefinitions(root, Array.from(configFiles));
-        }
     }
 
+    if(process.env.NODE_ENV !== 'production') {
+        // Generate type definitions for the config
+        logger.debug('Generating type definitions for config files...');
+        // logger.info('config: ' + configPath);
+        generateConfigTypeDefinitions(root, Array.from(configFiles));
+    }
 }

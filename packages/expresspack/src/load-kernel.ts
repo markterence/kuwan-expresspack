@@ -7,6 +7,8 @@ export async function loadKernel({ app }, {
         listener?: () => Promise<any>
     }) {
     logger.debug('Loading kernel...');
+
+    // This is mainly the middleware loading
     try {
         const fn = await kernel();
         const setup = fn.default || fn;

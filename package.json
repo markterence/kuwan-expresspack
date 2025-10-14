@@ -1,9 +1,12 @@
 {
     "workspaces": [
         "packages/*",
-        "playground/*"
+        "playground/kuwan"
     ],
     "devDependencies": {
         "tsup": "^8.5.0"
+    },
+    "scripts": {
+        "build-expresspack": "pnpm --filter expresspack build &&  pnpm pack --filter expresspack"
     }
 }

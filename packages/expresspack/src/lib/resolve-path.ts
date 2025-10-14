@@ -2,6 +2,7 @@ import { existsSync } from 'node:fs'
 import { join, relative } from 'node:path'
 
 export function resolveAppPaths(root: string) {
+    const rc = join(root, 'expresspack.config');
     const app = join(root, 'app')
 
     const config = join(root, 'config') 
@@ -18,6 +19,7 @@ export function resolveAppPaths(root: string) {
     const routesFilePath = join(app, 'routes')
 
     return {
+        rc,
         root,
         app,
         middlewareFilePath,
