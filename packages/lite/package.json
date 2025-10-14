@@ -57,7 +57,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsup --watch",
-    "build": "rimraf ./dist -v &&  tsup-node"
+    "build": "rimraf ./dist -v &&  tsup-node",
+    "publish": "echo \"Please read RELEASING.md for instructions.\" && exit 1"
   },
   "dependencies": {
     "citty": "^0.1.6",
