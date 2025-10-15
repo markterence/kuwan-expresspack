@@ -1,6 +1,8 @@
 import { CustomError } from "../../error";
 import type { ErrorRequestHandler } from 'express';
 
+export { notFoundErrorHandler } from "./notFound";
+
 export function errorHandler(): ErrorRequestHandler {
     return (err, req, res, next) => {
         if(CustomError.isCustomError(err)) {
