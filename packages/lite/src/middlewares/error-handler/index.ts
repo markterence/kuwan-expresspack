@@ -7,6 +7,15 @@ export function errorHandler(): ErrorRequestHandler {
             return res
                 .status(err.statusCode)
                 .json(err.toJSON());
+        } 
+        
+        if (err instanceof Error) {
+            const statusCode = (err as any).statusCode || 500;
+            return res
+                .status(statusCode)
+                .json({ error: 'Internal Server Error' });
         }
+        
+        next(err);
     }
 }
