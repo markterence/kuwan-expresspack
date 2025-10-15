@@ -1,8 +1,8 @@
 
-import { Router } from "express";
+import { Router, type RouterOptions } from "express";
 
-export function createRouter(): Router {
-    const router: Router = Router();
+export function createRouter(options?: RouterOptions): Router {
+    const router: Router = Router(options);
 
     return router;
 }
