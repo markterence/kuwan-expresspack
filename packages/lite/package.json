@@ -65,7 +65,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsup --watch",
-    "build": "rimraf ./dist -v &&  tsup-node",
+    "build": "rimraf ./dist -v && tsup-node",
+    "build:prod": "rimraf ./dist -v && NODE_ENV=production tsup-node",
     "release": "echo \"Please read RELEASING.md for instructions.\" && exit 1"
   },
   "dependencies": {
