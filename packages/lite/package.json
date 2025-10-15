@@ -25,6 +25,10 @@
       "types": "./dist/build-tools/index.d.ts",
       "import": "./dist/build-tools/index.mjs"
     },
+    "./eslint-config": {
+      "types": "./dist/eslint-config/index.d.ts",
+      "import": "./dist/eslint-config/index.mjs"
+    },
     "./config": {
       "types": "./dist/config.d.ts",
       "import": "./dist/config.mjs"
@@ -70,6 +74,7 @@
     "release": "echo \"Please read RELEASING.md for instructions.\" && exit 1"
   },
   "dependencies": {
+    "@antfu/eslint-config": "^6.0.0",
     "citty": "^0.1.6",
     "consola": "^3.4.2",
     "dayjs": "^1.11.18",
@@ -97,7 +102,9 @@
     "vitest": "^3.2.4"
   },
   "peerDependencies": {
+    "@antfu/eslint-config": "^6.0.0",
     "@types/express": "^5.0.3",
+    "eslint": "^9.37.0",
     "express": "^5.1.0",
     "typescript": "^5.9.3"
   },

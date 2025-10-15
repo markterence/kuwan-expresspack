@@ -10,6 +10,7 @@ export default defineConfig([
       'src/error.ts',
       'src/config.ts',
       'src/build-tools/index.ts', 
+      'src/eslint-config/index.ts',
       'src/middlewares/*/index.ts', 
       'src/services/*/index.ts',
       'src/utils/*.ts',
@@ -19,7 +20,7 @@ export default defineConfig([
           js: format === "esm" ? ".mjs" : ".js",
       }
     },
-    external: ['bun'],
+    external: ['bun', 'eslint'],
     platform: 'node',
     dts: true,
     format: ['esm'],
@@ -42,7 +43,7 @@ export default defineConfig([
           js: format === "esm" ? ".mjs" : ".js",
       }
     },
-    external: ['bun'],
+    external: ['bun', 'eslint'],
     platform: 'node',
     dts: false,
     format: ['esm'],
