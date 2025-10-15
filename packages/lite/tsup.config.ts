@@ -12,8 +12,7 @@ export default defineConfig([
       'src/build-tools/index.ts', 
       'src/middlewares/*/index.ts', 
       'src/services/*/index.ts',
-      'src/plugins/*/index.ts',
-      'src/plugins/auth/config.ts',
+      'src/utils/*.ts',
     ], 
     outExtension({ format }) {
       return {

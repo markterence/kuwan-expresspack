@@ -52,6 +52,14 @@
     "./services/event": {
       "types": "./dist/services/event/index.d.ts",
       "import": "./dist/services/event/index.mjs"
+    },
+    "./utils/crypto": {
+      "types": "./dist/utils/crypto.ts",
+      "import": "./dist/utils/crypto.mjs"
+    },
+    "./utils/dynamic-import": {
+      "types": "./dist/utils/dynamic-import.d.ts",
+      "import": "./dist/utils/dynamic-import.mjs"
     }
   },
   "scripts": {
