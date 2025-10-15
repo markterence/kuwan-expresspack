@@ -1,41 +1,10 @@
 import logger from './logger';
 import { join, relative } from 'node:path'
-import { glob } from 'tinyglobby';
+
 import { checkDir, getFileCandidate, resolveAppPaths } from './lib/resolve-path';
 import { logPath } from './lib/utils';
 import config from './config';
-import generateConfigTypeDefinitions from './lib/config-typegen';
- 
-
-const GLOB_PATTERN = '*.{js,ts,mjs,cjs,mts,cts}';
-const IGNORED_PATTERNS = [
-    /* Ignore definitions and source-maps */
-    '!*.d.{ts,mts,mjs,cts}', '!*.map', 
-];
-/**
- * Get all unique config topics from the config directory
- * 
- * Example: `config/<topic>.{js,ts,mjs,cjs,mts,cts}`
- */
-async function getConfigTopics(configDir: string): Promise<string[]> {
-    const configFiles = await glob([
-        GLOB_PATTERN,
-        ...IGNORED_PATTERNS
-    ], {
-        cwd: configDir,
-    })
-
-    // Extract unique topics (filenames without extensions)
-    const topics = new Set<string>()
-    
-    configFiles
-        .forEach(file => {
-            const topic = file.replace(/\.(js|ts|mjs|cjs|mts|cts)$/, '')
-            topics.add(topic)
-        })
-    
-    return Array.from(topics);
-}
+import { getConfigTopics } from './lib/get-config-topics';
 
 /**
  * Load all configurations from the config directory
@@ -84,9 +53,9 @@ export async function configLoader(root: string): Promise<void> {
             logger.debug(`Loaded config: ${topicCamelCase} from ${fileName}`)
             
             // For type generation, no need to generate types in production
-            if (process.env.NODE_ENV !== 'production') {
-                configFiles.add({ topic: topicCamelCase, configPath });
-            }
+            // if (process.env.NODE_ENV !== 'production') {
+            //     configFiles.add({ topic: topicCamelCase, configPath });
+            // }
 
             // Config signature validator (not implemented for now)
             // verifyConfigSignature(configModule.default || configModule, topicCamelCase, configPath);
@@ -97,10 +66,12 @@ export async function configLoader(root: string): Promise<void> {
 
     }
 
-    if(process.env.NODE_ENV !== 'production') {
-        // Generate type definitions for the config
-        logger.debug('Generating type definitions for config files...');
-        // logger.info('config: ' + configPath);
-        generateConfigTypeDefinitions(root, Array.from(configFiles));
-    }
+    // Temporarily disable type generation.
+    // Provided a CLI command to generate types instead.
+    // if(process.env.NODE_ENV !== 'production') {
+    //     // Generate type definitions for the config
+    //     logger.debug('Generating type definitions for config files...');
+    //     // logger.info('config: ' + configPath);
+    //     generateConfigTypeDefinitions(root, Array.from(configFiles));
+    // }
 }

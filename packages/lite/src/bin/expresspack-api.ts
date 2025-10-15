@@ -27,6 +27,41 @@ const main = defineCommand({
                 await execa(options)`${drizzleBin} pull ${rawArgs.join(' ')}` 
             }
         }),
+
+        'config-typegen': () => defineCommand({
+            meta: {
+                name: "config-typegen",
+                description: "Generate TypeScript definitions for files in the config directory",
+            },
+            args: {
+                configDir: {
+                    type: 'string',
+                    alias: 'c',
+                    description: 'Path of the `config` folder',
+                    default: path.join('./', 'src', 'config'),
+                },
+                output: {
+                    type: 'string',
+                    alias: 'o',
+                    description: 'Output directory for the generated types',
+                    required: true
+                }
+            },
+            async run({ args }) { 
+                
+                if (!args?.output) {
+                    console.error('Error: Output directory is required. Use -o or --output to specify the path.');
+                    process.exit(1);
+                }
+ 
+                const { default: configTypegenCmd } = await import('../lib/config-typegen-cmd');
+                await configTypegenCmd({
+                    configDir: args.configDir as string,
+                    output: args.output as string,
+                    cwd: process.cwd()
+                });
+            }
+        })
     }
 });
 
