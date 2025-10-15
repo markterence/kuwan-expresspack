@@ -1,10 +1,14 @@
+/**
+ * @module kuwan-expresspack-core/services/event
+ */
+
 import Emittery from 'emittery';
 import { env } from 'node:process'
 /**
  * Base event map that users can extend in their applications
  */
 export interface EmitterEvents {
-    [key: string]: any;
+    'app:mounted': undefined;
 }
 
 function isDebugEnabled(): boolean {
@@ -40,3 +44,4 @@ export function createEmitter<T extends EmitterEvents = EmitterEvents>(): Emitte
 
 export { emitter };
 export default emitter;
+export type { Emittery };
