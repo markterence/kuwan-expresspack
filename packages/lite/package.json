@@ -1,6 +1,6 @@
 {
   "name": "kuwan-expresspack-core",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "",
   "type": "module",
   "main": "./dist/index.mjs",
@@ -28,6 +28,10 @@
     "./eslint-config": {
       "types": "./dist/eslint-config/index.d.ts",
       "import": "./dist/eslint-config/index.mjs"
+    },
+    "./env": {
+      "types": "./dist/env.d.ts",
+      "import": "./dist/env.mjs"
     },
     "./config": {
       "types": "./dist/config.d.ts",
@@ -82,7 +86,8 @@
     "drizzle-orm": "^0.44.6",
     "emittery": "^1.2.0",
     "execa": "^9.6.0",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "zod": "^4.0.14"
   },
   "keywords": [],
   "author": {
