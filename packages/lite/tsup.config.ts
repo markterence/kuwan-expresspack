@@ -15,6 +15,7 @@ export default defineConfig([
       'src/middlewares/*/index.ts', 
       'src/services/*/index.ts',
       'src/utils/*.ts',
+      'src/third-party/*.ts',
     ], 
     outExtension({ format }) {
       return {
