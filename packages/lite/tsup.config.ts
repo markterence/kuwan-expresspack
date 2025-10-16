@@ -9,6 +9,7 @@ export default defineConfig([
       'src/index.ts',
       'src/error.ts',
       'src/config.ts',
+      'src/env.ts',
       'src/build-tools/index.ts', 
       'src/eslint-config/index.ts',
       'src/middlewares/*/index.ts', 
