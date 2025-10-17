@@ -1,6 +1,6 @@
 {
   "name": "kuwan-expresspack-core",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "",
   "type": "module",
   "main": "./dist/index.mjs",
@@ -72,6 +72,10 @@
     "./thrid-party/kysely-logger": {
       "types": "./dist/third-party/kysely-logger.d.ts",
       "import": "./dist/third-party/kysely-logger.mjs"
+    },
+    "./third-party/axios-agent": {
+      "types": "./dist/third-party/axios-agent.d.ts",
+      "import": "./dist/third-party/axios-agent.mjs"
     }
   },
   "scripts": {
@@ -116,7 +120,8 @@
     "eslint": "^9.37.0",
     "express": "^5.1.0",
     "typescript": "^5.9.3",
-    "kysely": "^0.28.8"
+    "kysely": "^0.28.8",
+    "axios": "^1.12.2"
   },
   "sideEffects": false
 }
