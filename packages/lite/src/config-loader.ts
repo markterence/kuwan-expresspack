@@ -38,6 +38,8 @@ export async function configLoader(root: string): Promise<void> {
         }
         
         try {
+            // Try fix issue with windows using the `c:/path/to/file` 
+            // rather than the proper file URL `file:///c:/path/to/file`
             const fileUri = import.meta.resolve(`./${topic}.js`, join(root, configDir))
             const configModule = await import(fileUri);
             let configValue = configModule.default || configModule
