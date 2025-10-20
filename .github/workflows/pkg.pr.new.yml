@@ -1,0 +1,47 @@
+name: Publish Any Commit
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'package.json'
+      - 'packages/lite/*/src/**'
+      - 'packages/lite/package.json'
+      - 'packages/lite/tsup.config.ts'
+
+  push:
+    branches:
+      - main
+    tags:
+      - '!**'
+    paths:
+      - 'package.json'
+      - 'packages/lite/*/src/**'
+      - 'packages/lite/package.json'
+      - 'packages/lite/tsup.config.ts'
+
+jobs:
+  build:
+    if: "!startsWith(github.event.pull_request.title, 'renovate/')"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: lts/*
+          cache: pnpm
+
+      - name: Install
+        run: cd packages/lite && pnpm install --frozen-lockfile
+
+      - name: Build
+        run: cd packages/lite && pnpm build:prod
+
+      - name: Release
+        run: pnpm dlx pkg-pr-new publish --compact --pnpm './packages/lite'
