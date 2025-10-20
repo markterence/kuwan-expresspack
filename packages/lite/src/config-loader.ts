@@ -5,6 +5,7 @@ import { checkDir, getFileCandidate, resolveAppPaths } from './lib/resolve-path'
 import { logPath } from './lib/utils';
 import config from './config';
 import { getConfigTopics } from './lib/get-config-topics';
+import { pathToFileURL } from 'node:url';
 
 /**
  * Load all configurations from the config directory
@@ -13,10 +14,11 @@ import { getConfigTopics } from './lib/get-config-topics';
  * since this is config loading is done before the app is created.
  */
 export async function configLoader(root: string): Promise<void> { 
+    // The loader code is Runtime code, so this will get problematic and incompatible for bundling.
     const { config: configPath } = resolveAppPaths(root);
     const configDir = configPath.base;
 
-    logger.debug('Loading all configurations from: '+ logPath(relative(root, configPath.base)));
+    logger.debug('Loading all configurations from: `'+ logPath(relative(root, configPath.base) + '`'));
 
     const dir = checkDir(configDir);
     if (!dir) {
@@ -39,7 +41,7 @@ export async function configLoader(root: string): Promise<void> {
         
         try {
             // Try fix issue with windows using the `c:/path/to/file` rather than the proper file URL `file:///c:/path/to/file`
-            const fileUri = import.meta.resolve(`./${topic}.js`, join(root, configDir))
+            const fileUri = pathToFileURL(configPath).href;
             const configModule = await import(fileUri);
             let configValue = configModule.default || configModule
           
@@ -51,8 +53,8 @@ export async function configLoader(root: string): Promise<void> {
             const topicCamelCase = topic.replace(/[-_](\w)/g, (_, c) => c ? c.toUpperCase() : ''); 
             config[topicCamelCase] = configValue
            
-            const fileName = configPath.split('/').pop()
-            logger.debug(`Loaded config: ${topicCamelCase} from ${fileName}`)
+            const fileName = relative(root, configPath);
+            logger.debug(`Loaded config: \`${topicCamelCase}\` from \`${fileName}\``)
             
             // For type generation, no need to generate types in production
             // if (process.env.NODE_ENV !== 'production') {
