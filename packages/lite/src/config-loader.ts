@@ -38,7 +38,8 @@ export async function configLoader(root: string): Promise<void> {
         }
         
         try {
-            const configModule = await import(configPath);
+            const fileUri = import.meta.resolve(`./${topic}.js`, join(root, configDir))
+            const configModule = await import(fileUri);
             let configValue = configModule.default || configModule
           
             // Handle factory functions
