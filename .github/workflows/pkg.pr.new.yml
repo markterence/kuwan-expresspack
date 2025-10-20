@@ -33,7 +33,8 @@ jobs:
           fetch-depth: 0
       - uses: pnpm/action-setup@v4
         name: Setup pnpm
-        working-directory: ./packages/lite
+        with:
+          version: 10.13.1
       - uses: actions/setup-node@v5
         with:
           node-version: lts/*
