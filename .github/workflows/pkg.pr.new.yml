@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - 'package.json'
-      - 'packages/lite/*/src/**'
+      - 'packages/lite/src/**'
       - 'packages/lite/package.json'
       - 'packages/lite/tsup.config.ts'
 
@@ -17,7 +17,7 @@ on:
       - '!**'
     paths:
       - 'package.json'
-      - 'packages/lite/*/src/**'
+      - 'packages/lite/src/**'
       - 'packages/lite/package.json'
       - 'packages/lite/tsup.config.ts'
 
