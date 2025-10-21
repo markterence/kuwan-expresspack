@@ -27,7 +27,8 @@
 
     "types": [
       "node"
-    ]
+    ],
+    "outDir": ".tsc"
   },
   "include": [
     "src/**/*.ts",
