@@ -98,7 +98,7 @@
     "express": "^5.1.0",
     "kysely": "^0.28.8",
     "tinyglobby": "^0.2.15",
-    "zod": "^4.0.14"
+    "zod": "4.1.12"
   },
   "keywords": [],
   "author": {
@@ -130,7 +130,8 @@
     "eslint": "^9.37.0",
     "express": "^5.1.0",
     "kysely": "^0.28.8",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "zod": "4.1.12"
   },
   "sideEffects": false
 }
