@@ -2,7 +2,9 @@ import process from 'node:process';
 import { defineConfig } from 'tsup';
 
 export default defineConfig([
+ 
   {
+    ignoreWatch: ['**/*.test.ts', '**/__tests__/**', '**/dist/**', '**/{.git,node_modules}/**' ],
     clean: false,
     treeshake: true,
     entry: [
@@ -34,6 +36,7 @@ export default defineConfig([
     minifyWhitespace: process.env.NODE_ENV == 'production',
   },
   {
+      ignoreWatch: ['**/*.test.ts', '**/__tests__/**', '**/dist/**', '**/{.git,node_modules}/**' ],
     clean: false,
     treeshake: true,
     entry: [
