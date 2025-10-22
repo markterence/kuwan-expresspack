@@ -22,3 +22,5 @@ export function createConsoleLogger(name: string, options: Partial<Pick<ConsolaO
     })
     return logger.withTag(name);
 }
+
+export const Logger = useConsoleLogger;
