@@ -1,6 +1,48 @@
 import { z } from 'zod';
+import logger, { cl } from './logger';
+export interface EnvOptions {
+  /**
+   * If true, throw an error on validation failure. 
+   * This will stop the application from starting
+   * if the environment variables are invalid.
+   */
+  fatal?: boolean;
 
+  /**
+   * If true, log errors immediately when validation fails.
+   * This will usually show at the start of the application logs.
+   * If false, no logs will be made. Errors can then be logged manually using `getEnvErrorString()` or `getEnvErrorRaw()`.
+   * 
+   * This only works when `fatal` is false.
+   */
+  immediate_log_error?: boolean;
 
+  /**
+   * If true, log errors after the application has started gracefully.
+   * Only works when using the provided graceful start handler included in this package. 
+   * 
+   * Set to `false` to disable logging after graceful start.
+   */
+  log_error_after_graceful_start?: boolean;
+}
+
+let envErrorString: string | null = null;
+let envErrorRaw: z.ZodError | null = null;
+/**
+ * This is only populated by `Env.create()`
+ */
+let globalOptions: Partial<EnvOptions> = {};
+/**
+ * This function is no longer maintained and was used
+ * only for `Env.create()` before to parse and exposed for convenience.
+ * 
+ * `Env.create()` has it's own internal parsing logic now.
+ * 
+ * This caused type inference issues with zod schema leading 
+ * to "Typescript infinite instantiation" error.
+ * 
+ * @deprecated Write your own parsing logic using zod directly or use `Env.create()` to validate env variables against a zod schema.
+ */
 function parseEnv<T>(
   schema: z.ZodObject,
   env: Record<string, string | undefined>
@@ -27,41 +69,131 @@ function parseEnv<T>(
 
 
 
-
 /**
  * Load env with types and validation from a Zod schema
  */
-export function create<T extends z.ZodTypeAny>(schema: T, data: unknown): z.infer<T> | undefined {
+export function create<T extends z.ZodObject>(schema: T, data: unknown, options: Partial<EnvOptions> = {
+  fatal: false,
+  immediate_log_error: true,
+  log_error_after_graceful_start: true,
+}): z.infer<T> | undefined | {} {
+  globalOptions = options;
+  if (options.fatal) {
+    // Throw error on validation failure
+    try {
+      const result = schema.parse(data);
+      return result;
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        envErrorString = z.prettifyError(error);
+        envErrorRaw = error;
+        // Since this is a throwing error, this should be logged immediately.
+        logger.error('❌ Invalid environment variables:', );
+        logger.error('❌', envErrorString);
+        throw new Error('Invalid environment variables. The environment variable did not pass the schema validation. Check if you have set all required environment variables correctly.');
+      } 
+      throw error;
+    }
+  }
+
+  // When fatal is false
   const result = schema.safeParse(data);
   if (!result.success) {
-    console.error('❌ Invalid environment variables:');
-    console.error(z.prettifyError(result.error));
-    return undefined;
+    // make everything optional and parse again to get partial data
+    // This makes missing env vars to be undefined to prevent runtime errors
+    // like `Cannot read property 'XYZ' of undefined`.
+    const partialEnv = schema.partial().safeParse(data); 
+    if (!partialEnv.success) {
+      // This should never happen since we are making everything optional
+      // Still return something to satisfy typescript
+      envErrorString = z.prettifyError(result.error);
+      envErrorRaw = result.error;
+      if (options.immediate_log_error) {
+        logger.error('❌ Invalid environment variables:');
+        logger.error('❌', envErrorString);
+      }
+      return {};
+    }
+
+    envErrorString = z.prettifyError(result.error);
+    envErrorRaw = result.error;
+    if (options.immediate_log_error) {
+      logger.error('❌ Invalid environment variables:');
+      logger.error('❌', envErrorString);
+    }
+
+
+    // .keyof(), this are the keys defined in the schema
+    const keys = schema.keyof(); 
+    // The partial'ed schema will not have missing keys, but those missing will have `undefined` values.
+    // We must include those missing keys so it will show in the logs.
+    for (const key of keys.options) {
+      if (!(key in partialEnv.data)) {
+        (partialEnv.data as Record<string, any>)[key] = undefined;
+      }
+    }
+
+    return partialEnv.data;
   }
   return result.data;
 }
-// export function create<T>(
-//   appRoot: string | URL,
-//   zodSchema: z.ZodObject,
-//   env?: Record<string, string | undefined>,
-// ): Record<string, any> | T {
-//   const parsedEnv = parseEnv(zodSchema, env || process.env);
-//   return parsedEnv ?? {} as T;
-// }
 
-// ...existing code...
+export function getEnvErrorRaw(): z.ZodError | null {
+  return envErrorRaw;
+}
 
 /**
- * Helper type to infer the environment variable types from a Zod schema
- *
- * @example
- * ```
- * export type Env = InferEnv<typeof envSchema>;
- * ```
+ * @returns Formatted string of environment variable validation error.
+ * The format is the exact same as zod's `prettifyError` output.
  */
-// export type InferEnv<T extends z.ZodType> = z.infer<T>;
+export function getEnvErrorString(): string | null {
+  return envErrorString;
+}
+
+/**
+ * Does not log to console, just returns the formatted string.
+ */
+export function prettifyEnv(env: Record<string, any>): string | undefined {
+  if (!env || Object.keys(env).length === 0) {
+    // Do not try to print, Infinity error may happen on .repeat(keyWidth - 3)
+    logger.warn('No environment variables to print. Make sure the env is complete and valid.'); 
+    return;
+  }
+
+  const envEntries = Object.entries(env).sort(([a], [b]) => a.localeCompare(b));
+  const keyWidth = Math.max(...envEntries.map(([key]) => key.length)) + 2;
+  const lines = envEntries.map(([key, value]) => {
+    const paddedKey = key.padEnd(keyWidth, ' ');
+    return `${paddedKey} ${cl(value)}`;
+  });
+  // pad the "VALUE" header column
+  const header = `KEY${' '.repeat(keyWidth - 3)} VALUE`;
+  const spacer = ' '.repeat(header.length);
+  const formattedEnv = [spacer,header, spacer, ...lines].join('\n');
+  return formattedEnv;
+}
+
+/**
+ * This is a convenience function to log env errors manually.
+ * Errors are already logged after by graceful start.
+ */
+export function logEnvErrors() {
+  if (globalOptions) {
+    const { log_error_after_graceful_start } = globalOptions;
+    if (log_error_after_graceful_start) {
+      const errLogStr = getEnvErrorString();
+      if (errLogStr) {
+        logger.error(`Invalid Environment Variable Value`, `\n-----\n${errLogStr}\n-----`);
+      }
+    }
+  }
+}
 
 export default {
   create,
   parseEnv,
+  prettifyEnv,
+  getEnvErrorRaw,
+  getEnvErrorString,
+  logEnvErrors,
 };
