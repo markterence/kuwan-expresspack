@@ -100,6 +100,7 @@ export function create<T extends z.ZodObject>(
     log_error_after_graceful_start: true,
   }
 ): z.infer<T> | undefined | {} {
+  setLoggerLevelFromEnv();
   globalOptions = options;
   if (options.fatal) {
     // Throw error on validation failure
@@ -153,7 +154,6 @@ export function create<T extends z.ZodObject>(
     // .keyof(), this are the keys defined in the schema
     const keys = schema.keyof();
     schemaKeys = keys.options;
-    const parsedEnvKeys = Object.keys(parsedEnv ? parsedEnv : {});
     // The partial'ed schema will not have missing keys, but those missing will have `undefined` values.
     // We must include those missing keys so it will show in the logs.
     for (const key of keys.options) {
@@ -171,6 +171,12 @@ export function create<T extends z.ZodObject>(
 
   const keys = schema.keyof();
   schemaKeys = keys.options;
+  for (const key of keys.options) {
+    if (!(key in result.data)) {
+      // This is for those entries in schema that are optional and missing in the .env
+      (result.data as Record<string, any>)[key] = undefined;
+    }
+  }
   return {
     ...parsedEnv,
     ...result.data,
@@ -202,11 +208,10 @@ export function prettifyEnv(env: Record<string, any>): string | undefined {
   }
 
   const dimNotInSchema = (key: string): string => {
-    if (schemaKeys.includes(key)) {
-      return key;
-    } else {
-      return cz("dim", `${key}`);
+    if(key.startsWith('* ')) {
+      return cz('dim', key)
     }
+    return key;
   };
   const markNotInSchema = (key: string): string => {
     if (schemaKeys.includes(key)) {
@@ -216,15 +221,32 @@ export function prettifyEnv(env: Record<string, any>): string | undefined {
     }
   };
 
+  const dimNotInEnvButInSchema = (key: string): string => {
+    // Dim keys that are marked as not in env. Denoted by "! " prefix.
+    if (key.startsWith('! ') ) {
+      return cz('dim',  cz('yellow', `${key}`))
+    } else {
+      return key;
+    }
+  }
+  const markNotInEnvButInSchema = (key: string): string => {
+    if (schemaKeys.includes(key) && env[key] === undefined) {
+      return `! ${key}`;
+    } else {
+      return key;
+    }
+  }
+
   const envEntries = Object.entries(env)
     .sort(([a], [b]) => a.localeCompare(b))
-    .map(([key, value]) => [markNotInSchema(key), value]);
+    .map(([key, value]) => [markNotInSchema(key), value])
+    .map(([key, value]) => [markNotInEnvButInSchema(key), value]);
 
   const keyWidth = Math.max(...envEntries.map(([key]) => key.length)) + 2;
   const lines = envEntries.map(([key, value]) => {
-    const paddedKey = key.padEnd(keyWidth, " ");
+    const paddedKey = key.padEnd(keyWidth, " ") as string;
     // .replace to fix broken padding due to ansi codes
-    const mKey = paddedKey.replace(key, dimNotInSchema(key));
+    const mKey = paddedKey.replace(key, dimNotInSchema(key)).replace(key, dimNotInEnvButInSchema(key));
     return `${mKey} ${cl(value)}`;
   });
   // pad the "VALUE" header column
@@ -263,25 +285,24 @@ export function config(options?: DotenvConfigOptions | undefined) {
 }
 
 function envProxy<T extends Record<string, any>>(env: T) {
-    return new Proxy(env, {
-        get(target, prop: string) {
-            if (prop in target) {
-                return target[prop];
-            }
-            return process.env[prop];
-        },
-    })
+  return new Proxy(env, {
+    get(target, prop: string) {
+      if (prop in target) {
+        return target[prop];
+      }
+      return process.env[prop];
+    },
+  });
 }
 
 function createProxy<T extends z.ZodObject<any>>(
-    schema: T,
-    data: unknown,
-    options?: Partial<EnvOptions>
-)  {
-    const validatedEnv = create(schema, data, options) as z.output<T>; 
-    return envProxy(validatedEnv) as z.output<T>
+  schema: T,
+  data: unknown,
+  options?: Partial<EnvOptions>
+) {
+  const validatedEnv = create(schema, data, options) as z.output<T>;
+  return envProxy(validatedEnv) as z.output<T>;
 }
-
 
 export default {
   create: createProxy,
