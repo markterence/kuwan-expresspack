@@ -1,6 +1,4 @@
 import consola from 'consola'; 
-
-console.log('EXPRESSPACK_LOG_LEVEL set to:', process.env.EXPRESSPACK_LOG_LEVEL);
 /**
  * This is the internal logger
  */
