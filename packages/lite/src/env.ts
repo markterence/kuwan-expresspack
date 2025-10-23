@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { config as dotEnvXConfig, type DotenvConfigOptions, type DotenvConfigOutput, type DotenvParseOutput } from '@dotenvx/dotenvx';
+
 import logger, { cl } from './logger';
 export interface EnvOptions {
   /**
@@ -24,14 +26,18 @@ export interface EnvOptions {
    * Set to `false` to disable logging after graceful start.
    */
   log_error_after_graceful_start?: boolean;
-}
+} 
 
+let parsedEnv: DotenvParseOutput | undefined = undefined;
 let envErrorString: string | null = null;
 let envErrorRaw: z.ZodError | null = null;
+
 /**
- * This is only populated by `Env.create()`
+ * @private
+ * This is only populated by `Env.create()`.
  */
 let globalOptions: Partial<EnvOptions> = {};
+
 /**
  * This function is no longer maintained and was used
  * only for `Env.create()` before to parse and exposed for convenience.
@@ -82,7 +88,10 @@ export function create<T extends z.ZodObject>(schema: T, data: unknown, options:
     // Throw error on validation failure
     try {
       const result = schema.parse(data);
-      return result;
+      return {
+        ...parsedEnv,
+        ...result
+      };
     } catch (error) {
       if (error instanceof z.ZodError) {
         envErrorString = z.prettifyError(error);
@@ -105,14 +114,14 @@ export function create<T extends z.ZodObject>(schema: T, data: unknown, options:
     const partialEnv = schema.partial().safeParse(data); 
     if (!partialEnv.success) {
       // This should never happen since we are making everything optional
-      // Still return something to satisfy typescript
+      // Still return something to satisfy the return type and make it work like dotenv
       envErrorString = z.prettifyError(result.error);
       envErrorRaw = result.error;
       if (options.immediate_log_error) {
         logger.error('❌ Invalid environment variables:');
         logger.error('❌', envErrorString);
       }
-      return {};
+      return parsedEnv || {};
     }
 
     envErrorString = z.prettifyError(result.error);
@@ -121,8 +130,7 @@ export function create<T extends z.ZodObject>(schema: T, data: unknown, options:
       logger.error('❌ Invalid environment variables:');
       logger.error('❌', envErrorString);
     }
-
-
+    
     // .keyof(), this are the keys defined in the schema
     const keys = schema.keyof(); 
     // The partial'ed schema will not have missing keys, but those missing will have `undefined` values.
@@ -133,9 +141,15 @@ export function create<T extends z.ZodObject>(schema: T, data: unknown, options:
       }
     }
 
-    return partialEnv.data;
+    return {
+      ...parsedEnv,
+      ...partialEnv.data,
+    };
   }
-  return result.data;
+  return {
+    ...parsedEnv,
+    ...result.data
+  };
 }
 
 export function getEnvErrorRaw(): z.ZodError | null {
@@ -189,6 +203,14 @@ export function logEnvErrors() {
   }
 }
 
+// Similar to @dotenvx/config but configured to work with our Env.create()
+export function config(options?: DotenvConfigOptions | undefined): DotenvConfigOutput {
+  const result = dotEnvXConfig(options);
+  parsedEnv = (result.parsed) ? result.parsed : undefined;
+  return result as DotenvConfigOutput;
+}
+ 
+
 export default {
   create,
   parseEnv,
@@ -196,4 +218,5 @@ export default {
   getEnvErrorRaw,
   getEnvErrorString,
   logEnvErrors,
+  config,
 };
