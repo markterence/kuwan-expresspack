@@ -1,9 +1,10 @@
 import consola, { type ConsolaInstance, type ConsolaOptions } from 'consola';
 import { env } from 'node:process';
-const logLevel = env.APP_LOG_LEVEL;
 
+console.log('[Logger] APP_LOG_LEVEL set to:', process.env.APP_LOG_LEVEL);
+// console.log('[Logger] Numeric log level:', Number.isNaN(Number(logLevel)) ? 3 : Number(logLevel) );
 export const println = consola.create({
-    level: Number.isNaN(Number(logLevel)) ? 3 : Number(logLevel) 
+    level: Number.isNaN(Number(env.APP_LOG_LEVEL)) ? 3 : Number(env.APP_LOG_LEVEL) 
 })
 
 /**
@@ -17,6 +18,7 @@ export function useConsoleLogger(name: string): ConsolaInstance {
  * Create a console logger allowing to specify log level in options.
  */
 export function createConsoleLogger(name: string, options: Partial<Pick<ConsolaOptions, "level">>): ConsolaInstance {
+    const logLevel = process.env.APP_LOG_LEVEL;
     const logger = consola.create({
         level: options.level ?? (Number.isNaN(Number(logLevel)) ? 3 : Number(logLevel))
     })

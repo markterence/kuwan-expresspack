@@ -33,6 +33,10 @@
       "types": "./dist/env.d.ts",
       "import": "./dist/env.mjs"
     },
+    "./env-config": {
+      "types": "./dist/env-config.d.ts",
+      "import": "./dist/env-config.mjs"
+    },
     "./config": {
       "types": "./dist/config.d.ts",
       "import": "./dist/config.mjs"

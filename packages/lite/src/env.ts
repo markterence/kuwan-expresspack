@@ -1,7 +1,12 @@
 import { z } from 'zod';
 import { config as dotEnvXConfig, type DotenvConfigOptions, type DotenvConfigOutput, type DotenvParseOutput } from '@dotenvx/dotenvx';
+import { cz, cl } from './lib/logger-utils';
 
-import logger, { cl } from './logger';
+import logger, { setLoggerLevelFromEnv } from './logger';
+// const logger = consola.create({
+//   level: Number(process.env.APP_LOG_LEVEL)
+// });
+
 export interface EnvOptions {
   /**
    * If true, throw an error on validation failure. 
@@ -37,6 +42,11 @@ let envErrorRaw: z.ZodError | null = null;
  * This is only populated by `Env.create()`.
  */
 let globalOptions: Partial<EnvOptions> = {};
+/**
+ * @private 
+ * Keys of the zod schema, used to mark if the env var is defined in the schema.
+ */
+let schemaKeys: string[] = [];
 
 /**
  * This function is no longer maintained and was used
@@ -105,8 +115,8 @@ export function create<T extends z.ZodObject>(schema: T, data: unknown, options:
     }
   }
 
-  // When fatal is false
   const result = schema.safeParse(data);
+  // When parsing fails, return partial data with undefined for missing keys
   if (!result.success) {
     // make everything optional and parse again to get partial data
     // This makes missing env vars to be undefined to prevent runtime errors
@@ -133,6 +143,8 @@ export function create<T extends z.ZodObject>(schema: T, data: unknown, options:
     
     // .keyof(), this are the keys defined in the schema
     const keys = schema.keyof(); 
+    schemaKeys = keys.options;
+ 
     // The partial'ed schema will not have missing keys, but those missing will have `undefined` values.
     // We must include those missing keys so it will show in the logs.
     for (const key of keys.options) {
@@ -146,6 +158,9 @@ export function create<T extends z.ZodObject>(schema: T, data: unknown, options:
       ...partialEnv.data,
     };
   }
+
+  const keys = schema.keyof(); 
+  schemaKeys = keys.options;
   return {
     ...parsedEnv,
     ...result.data
@@ -173,12 +188,30 @@ export function prettifyEnv(env: Record<string, any>): string | undefined {
     logger.warn('No environment variables to print. Make sure the env is complete and valid.'); 
     return;
   }
+  
+  const dimNotInSchema = (key: string): string => {
+    if (schemaKeys.includes(key)) {
+      return key;
+    } else {
+      return cz('dim',`${key}`);
+    }
+  }
+  const markNotInSchema = (key: string): string => {
+    if (schemaKeys.includes(key)) {
+      return key;
+    } else {
+      return `* ${key}`;
+    }
+  }
+  
+  const envEntries = Object.entries(env).sort(([a], [b]) => a.localeCompare(b)).map(([key, value]) => [markNotInSchema(key), value]);
 
-  const envEntries = Object.entries(env).sort(([a], [b]) => a.localeCompare(b));
   const keyWidth = Math.max(...envEntries.map(([key]) => key.length)) + 2;
   const lines = envEntries.map(([key, value]) => {
     const paddedKey = key.padEnd(keyWidth, ' ');
-    return `${paddedKey} ${cl(value)}`;
+    // .replace to fix broken padding due to ansi codes
+    const mKey = paddedKey.replace(key, dimNotInSchema(key));
+    return `${mKey} ${cl(value)}`;
   });
   // pad the "VALUE" header column
   const header = `KEY${' '.repeat(keyWidth - 3)} VALUE`;
@@ -204,10 +237,13 @@ export function logEnvErrors() {
 }
 
 // Similar to @dotenvx/config but configured to work with our Env.create()
-export function config(options?: DotenvConfigOptions | undefined): DotenvConfigOutput {
+export function config(options?: DotenvConfigOptions | undefined) {
+  parsedEnv = {};
   const result = dotEnvXConfig(options);
+  setLoggerLevelFromEnv()
   parsedEnv = (result.parsed) ? result.parsed : undefined;
   return result as DotenvConfigOutput;
+ 
 }
  
 

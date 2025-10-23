@@ -1,45 +1,20 @@
 import consola from 'consola'; 
-import { colorize } from 'consola/utils'
- 
-const logLevel = process.env.EXPRESSPACK_LOG_LEVEL;
+
+console.log('EXPRESSPACK_LOG_LEVEL set to:', process.env.EXPRESSPACK_LOG_LEVEL);
 /**
  * This is the internal logger
  */
 const logger = consola.create({
-    level: Number.isNaN(Number(logLevel)) ? 3 : Number(logLevel),
+    level: Number.isNaN(Number(process.env.EXPRESSPACK_LOG_LEVEL)) ? 3 : Number(process.env.EXPRESSPACK_LOG_LEVEL),
 })
 
 /**
- * Colorize primitive values for console logging
+ * @internal
+ * Set the logger level from the `EXPRESSPACK_LOG_LEVEL` env variable.
+ * This is useful when the logger is used before the env variables are loaded.
  */
-export function cl(val: string | number | bigint | boolean | symbol | null | undefined): string {
-  switch (typeof val) {
-    case 'number':
-    case 'bigint':
-      return colorize('cyan', val.toString()); // numeric values → cyan
-
-    case 'boolean':
-      return colorize(val ? 'green' : 'red', String(val)); // true=green, false=red
-
-    case 'symbol':
-      return colorize('magenta', val.toString()); // symbols → magenta
-
-    case 'string': 
-      // if numeric string
-      if (!isNaN(Number(val))) {
-        return colorize('yellow', `'${val}'`);
-      }
-      return colorize('whiteBright', `${val}`);
-
-    case 'undefined':
-      return colorize('gray', 'undefined');
-  }
-
-  if (val === null) {
-    return colorize('dim', 'null');
-  }
-
-  return String(val);
+export function setLoggerLevelFromEnv() {
+  const val = Number(process.env.EXPRESSPACK_LOG_LEVEL);
+  logger.level = Number.isNaN(val) ? 3 : val;
 }
-
 export default logger;
