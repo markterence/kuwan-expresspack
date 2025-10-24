@@ -1,7 +1,7 @@
 
 export { gracefulHTTPStart } from './graceful-start';
 export { gracefulShutdown } from './graceful-shutdown';
-export { defineKernel } from './define-kernel';
+export { defineKernel, defineMiddlewareKernel } from './define-kernel';
 export type { AppContext, KernelExports } from './define-kernel';
 export { loadKernel} from './load-kernel';
 export type { 

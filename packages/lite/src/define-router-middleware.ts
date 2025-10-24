@@ -6,8 +6,8 @@ import type { Router, RouterOptions } from 'express';
  * @param fn Callback to register routes on the router
  * @returns Express Router instance
  */
-export function defineRouterMiddleware(fn: (router: Router) => void, options?: RouterOptions): Router {
-    const router = createRouter(options);
-    fn(router);
-    return router;
+export function defineRouterMiddleware(fn: (r: Router) => void, options?: RouterOptions): Router {
+    const r = createRouter(options);
+    fn(r);
+    return r;
 }

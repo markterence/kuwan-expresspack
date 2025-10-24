@@ -24,7 +24,7 @@ export function gracefulHTTPStart(
     });
     
     try {
-      await emitter.emit("app:mounted");
+      await emitter.emit("app:mounted", { app });
     } catch (err) {
       logger.error("Error during app:mounted event:", err);
     } finally {
