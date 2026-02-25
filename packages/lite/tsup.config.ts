@@ -19,6 +19,9 @@ export default defineConfig([
       'src/services/*/index.ts',
       'src/utils/*.ts',
       'src/third-party/*.ts',
+      'src/context/index.ts',
+      'src/context/context-store/*.ts',
+      'src/context/simple-context.ts',
     ], 
     outExtension({ format }) {
       return {

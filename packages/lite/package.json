@@ -57,6 +57,18 @@
       "types": "./dist/middlewares/error-handler/index.d.ts",
       "import": "./dist/middlewares/error-handler/index.mjs"
     },
+    "./middlewares/app-context": {
+      "types": "./dist/middlewares/app-context/index.d.ts",
+      "import": "./dist/middlewares/app-context/index.mjs"
+    },
+    "./context-store": {
+      "types": "./dist/context/context-store/index.d.ts",
+      "import": "./dist/context/context-store/index.mjs"
+    },
+    "./simple-context": {
+      "types": "./dist/context/simple-context.d.ts",
+      "import": "./dist/context/simple-context.mjs"
+    },
     "./services/*": {
       "types": "./dist/services/*/index.d.ts",
       "import": "./dist/services/*/index.mjs"
