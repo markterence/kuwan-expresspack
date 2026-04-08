@@ -275,6 +275,30 @@ export function logEnvErrors() {
   }
 }
 
+/**
+ * This will print the passed env vars regardless of the NODE_ENV, 
+ * it is on your discretion on when to call this function.
+ * 
+ * @param envVars The environment variables to log
+ */
+export function debugEnvVars(envVars: Record<string, any>, 
+  redactFunction?: (key: string, value: any) => [string, any]
+) {
+  logger.log('[Environment Variables] on `env.ts`');
+  const redactedEnv = Object.fromEntries(Object.entries({ ...envVars }).map(([key, value]) => {
+    // Shorten long values
+    if (typeof value === 'string' && value.length > 36) {
+      return [key, `${value.slice(0, 36)}...`];
+    }
+    if (redactFunction) {
+      return redactFunction(key, value);
+    }
+    return [key, value];
+  }));
+
+  logger.log(`${prettifyEnv(redactedEnv)}\n`);
+}
+
 // Similar to @dotenvx/config but configured to work with our Env.create()
 export function config(options?: DotenvConfigOptions | undefined) {
   parsedEnv = {};
