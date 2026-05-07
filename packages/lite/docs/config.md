@@ -81,3 +81,10 @@ export default {
     }
 };
 ````
+
+### Bundling issues
+
+When bundling the application, it is not recommended to use the `config` object directly and also avoid using the automatic loading of configuration files. 
+
+Instead, you can create a separate configuration file that exports the necessary configuration values and import it directly in your application code. This approach ensures that the configuration is included in the bundle and can be accessed without issues.
+
