@@ -43,7 +43,7 @@ export interface DefineRouterMiddlewareOptions extends RouterOptions {
  */
 export function defineRouterMiddleware(
     fn: (context: DefineRouteMiddlewareContext) => void, 
-    options?: RouterOptions
+    options?: DefineRouterMiddlewareOptions
 ): DefineRouterMiddlewareReturn {
     // const r = createRouter(options);
     // fn(r);
